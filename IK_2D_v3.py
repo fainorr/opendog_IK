@@ -95,21 +95,22 @@ def getServoAng(x, z, lf, lt):
 
 fig = plt.figure()
 plt.axis('equal')
+fig.patch.set_facecolor('w')
 ax = plt.axes(xlim=(-(lf+lt)-ls,(lf+lt)), ylim=(-(lf+lt),(lf+lt)))
-
-spine, = ax.plot([],[],lw=8,c='0.5')
 
 fline1, = ax.plot([],[],lw=5,c='0.7')
 tline1, = ax.plot([],[],lw=5,c='0.7')
 target1, = ax.plot([],[],lw=5,c='b')
 
-fline2, = ax.plot([],[],lw=5,c='k')
-tline2, = ax.plot([],[],lw=5,c='k')
-target2, = ax.plot([],[],lw=5,c='k')
-
 fline3, = ax.plot([],[],lw=5,c='0.7')
 tline3, = ax.plot([],[],lw=5,c='0.7')
 target3, = ax.plot([],[],lw=5,c='0.7')
+
+spine, = ax.plot([],[],lw=8,c='0.5')
+
+fline2, = ax.plot([],[],lw=5,c='k')
+tline2, = ax.plot([],[],lw=5,c='k')
+target2, = ax.plot([],[],lw=5,c='k')
 
 fline4, = ax.plot([],[],lw=5,c='k')
 tline4, = ax.plot([],[],lw=5,c='k')
