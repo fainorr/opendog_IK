@@ -56,6 +56,12 @@ fline, = ax.plot([],[],lw=5)
 tline, = ax.plot([],[],lw=5)
 target, = ax.plot([],[],lw=5)
 
+x_ann_list = []
+z_ann_list = []
+Af_ann_list = []
+At_ann_list = []
+
+
 def init():
 	fline.set_data([],[])
 	tline.set_data([],[])
@@ -63,6 +69,7 @@ def init():
 	return fline, tline, target,
 
 def animate(i):
+
 	angf,angt = getServoAng(x1[i],z1[i],lf,lt)
 	xf = [0,-lf*cos(angf)]
 	zf = [0,-lf*sin(angf)]
@@ -73,11 +80,49 @@ def animate(i):
 	xtg = [x1[i], x1[i]]
 	ztg = [z1[i], z1[i]]
 
-	print angf*180/pi, angt*180/pi
+	#print angf*180/pi, angt*180/pi
 
 	fline.set_data(xf,zf)
 	tline.set_data(xt,zt)
 	target.set_data(xtg,ztg)
+
+	x_text = "target x: {:.1f}".format(xtg[0])
+	z_text = "target z: {:.1f}".format(ztg[0])
+	Af_text = "femur angle: {:.0f}".format(angf*180/pi)
+	At_text = "tibia angle: {:.0f}".format(angt*180/pi)
+
+	for j, a in enumerate(z_ann_list):
+		a.remove()
+	for j, a in enumerate(x_ann_list):
+		a.remove()
+	for j, a in enumerate(Af_ann_list):
+		a.remove()
+	for j, a in enumerate(At_ann_list):
+		a.remove()
+
+	x_ann_list[:] = []
+	z_ann_list[:] = []
+	Af_ann_list[:] = []
+	At_ann_list[:] = []
+
+	x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.7, 0.95), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	z_ann = plt.annotate(z_text, xy=(0, 0), xytext=(0.7, 0.9), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	Af_ann = plt.annotate(Af_text, xy=(0, 0), xytext=(0.7, 0.8), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	At_ann = plt.annotate(At_text, xy=(0, 0), xytext=(0.7, 0.75), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	x_ann_list.append(x_ann)
+	z_ann_list.append(z_ann)
+	Af_ann_list.append(Af_ann)
+	At_ann_list.append(At_ann)
+
+
  	return fline, tline, target,
 
 
