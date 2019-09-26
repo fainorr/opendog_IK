@@ -29,10 +29,10 @@ x_stride = 1.5
 z_center = -3.5
 z_lift = 0.5
 
-leg1_offset = 0
-leg2_offset = pi
-leg3_offset = pi
-leg4_offset = 0
+leg1_offset = pi/4		# front left
+leg2_offset = 5*pi/4	# front right
+leg3_offset = 0			# back left
+leg4_offset = pi 		# back right
 
 
 # initialize: x and z positions for each foot & femur and tibia angles for each leg
