@@ -21,8 +21,6 @@ ls = 5.00 # spine, inches
 gait_duration = 2 # seconds
 leg_pace = 25 # pace of gait
 
-t = linspace(0,gait_duration,1000)
-
 x_center = -0.5
 x_stride = 1.5
 
@@ -37,6 +35,8 @@ leg4_offset = pi 		# back right
 
 # initialize: x and z positions for each foot & femur and tibia angles for each leg
 # leg indexing: 1-front left, 2-front right, 3-back left, 4-back right
+
+t = linspace(0,gait_duration,1000)
 
 x1 = zeros(len(t))
 z1 = zeros(len(t))
@@ -75,7 +75,7 @@ for i in range(0,len(t)):
 	z4[i] = z_center + z_lift*sin(leg_pace*t[i] - leg4_offset)
 
 
-# servo angles Af (femur) and At (tibia)
+# function to solve for servo angles Af (femur) and At (tibia)
 
 def getServoAng(x, z, lf, lt):
 	if (x<0):
@@ -91,7 +91,7 @@ def getServoAng(x, z, lf, lt):
 	return Af,At
 
 
-# create animation figure
+# ANIMATION FIGURE
 
 fig = plt.figure()
 plt.axis('equal')
@@ -108,13 +108,13 @@ target3, = ax.plot([],[],lw=5,c='0.7')
 
 spine, = ax.plot([],[],lw=8,c='0.5')
 
-fline2, = ax.plot([],[],lw=5,c='k')
-tline2, = ax.plot([],[],lw=5,c='k')
-target2, = ax.plot([],[],lw=5,c='k')
+fline2, = ax.plot([],[],lw=6,c='k')
+tline2, = ax.plot([],[],lw=6,c='k')
+target2, = ax.plot([],[],lw=6,c='k')
 
-fline4, = ax.plot([],[],lw=5,c='k')
-tline4, = ax.plot([],[],lw=5,c='k')
-target4, = ax.plot([],[],lw=5,c='k')
+fline4, = ax.plot([],[],lw=6,c='k')
+tline4, = ax.plot([],[],lw=6,c='k')
+target4, = ax.plot([],[],lw=6,c='k')
 
 x_ann_list = []
 z_ann_list = []
@@ -147,11 +147,15 @@ def init():
 
 def animate(i):
 
+	# solve for angles for each leg
+
 	angf1[i], angt1[i] = getServoAng(x1[i], z1[i], lf, lt)
 	angf2[i], angt2[i] = getServoAng(x2[i], z2[i], lf, lt)
 	angf3[i], angt3[i] = getServoAng(x3[i], z3[i], lf, lt)
 	angf4[i], angt4[i] = getServoAng(x4[i], z4[i], lf, lt)
 
+
+	# given these angles, solve for the limb positions for simulation
 
 	xf1 = [0, -lf*cos(angf1[i])]
 	zf1 = [0, -lf*sin(angf1[i])]
@@ -181,8 +185,8 @@ def animate(i):
 	xtg4 = [x4[i]-ls, x4[i]-ls]
 	ztg4 = [z4[i], z4[i]]
 
-	
-	spine.set_data([-ls,0],[0,0])
+
+	# write calculated position to limb elements in figure
 
 	fline1.set_data(xf1, zf1)
 	tline1.set_data(xt1, zt1)
@@ -200,10 +204,18 @@ def animate(i):
 	tline4.set_data(xt4, zt4)
 	target4.set_data(xtg4, ztg4)
 
+	spine.set_data([-ls,0],[0,0])
+
+
+	# create annotations with live updates about foot position and joint angles (for leg 1)
+
 	x_text = "target x: {:.1f}".format(xtg1[0])
 	z_text = "target z: {:.1f}".format(ztg1[0])
 	Af_text = "femur angle: {:.0f}".format(angf1[i]*180/pi)
 	At_text = "tibia angle: {:.0f}".format(angt1[i]*180/pi)
+
+
+	# remove previous annotations
 
 	for j, a in enumerate(z_ann_list):
 		a.remove()
@@ -218,6 +230,9 @@ def animate(i):
 	z_ann_list[:] = []
 	Af_ann_list[:] = []
 	At_ann_list[:] = []
+
+
+	# apply annotations to figure
 
 	x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.7, 0.95), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
