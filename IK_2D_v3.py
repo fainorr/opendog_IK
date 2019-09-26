@@ -121,6 +121,9 @@ z_ann_list = []
 Af_ann_list = []
 At_ann_list = []
 
+ax.legend([fline1, fline2], ['left legs', 'right legs'], loc='west')
+
+
 
 def init():
 
@@ -234,16 +237,16 @@ def animate(i):
 
 	# apply annotations to figure
 
-	x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.7, 0.95), textcoords='axes fraction',
+	x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.1, 0.95), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
 
-	z_ann = plt.annotate(z_text, xy=(0, 0), xytext=(0.7, 0.9), textcoords='axes fraction',
+	z_ann = plt.annotate(z_text, xy=(0, 0), xytext=(0.1, 0.9), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
 
-	Af_ann = plt.annotate(Af_text, xy=(0, 0), xytext=(0.7, 0.8), textcoords='axes fraction',
+	Af_ann = plt.annotate(Af_text, xy=(0, 0), xytext=(0.1, 0.8), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
 
-	At_ann = plt.annotate(At_text, xy=(0, 0), xytext=(0.7, 0.75), textcoords='axes fraction',
+	At_ann = plt.annotate(At_text, xy=(0, 0), xytext=(0.1, 0.75), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
 
 	x_ann_list.append(x_ann)
