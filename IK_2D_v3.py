@@ -57,7 +57,7 @@ x4 = zeros(len(t))
 z4 = zeros(len(t))
 angf4 = zeros(len(t))
 angt4 = zeros(len(t))
-
+#hi
 
 # develop functions for foot positions for given gait
 
