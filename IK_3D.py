@@ -50,20 +50,20 @@ angs1 = zeros(len(t))
 angf1 = zeros(len(t))
 angt1 = zeros(len(t))
 
-x2 = zeros(len(t))
-z2 = zeros(len(t))
-angf2 = zeros(len(t))
-angt2 = zeros(len(t))
+# x2 = zeros(len(t))
+# z2 = zeros(len(t))
+# angf2 = zeros(len(t))
+# angt2 = zeros(len(t))
 
-x3 = zeros(len(t))
-z3 = zeros(len(t))
-angf3 = zeros(len(t))
-angt3 = zeros(len(t))
+# x3 = zeros(len(t))
+# z3 = zeros(len(t))
+# angf3 = zeros(len(t))
+# angt3 = zeros(len(t))
 
-x4 = zeros(len(t))
-z4 = zeros(len(t))
-angf4 = zeros(len(t))
-angt4 = zeros(len(t))
+# x4 = zeros(len(t))
+# z4 = zeros(len(t))
+# angf4 = zeros(len(t))
+# angt4 = zeros(len(t))
 
 
 # develop functions for foot positions for given gait
@@ -73,23 +73,19 @@ for i in range(0,len(t)):
 	y1[i] = y_center + y_offset*sin(leg_pace*t[i] - leg1_offset)
 	z1[i] = z_center + z_lift*sin(leg_pace*t[i] - leg1_offset)
 
-	x2[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg2_offset)
-	z2[i] = z_center + z_lift*sin(leg_pace*t[i] - leg2_offset)
+	# x2[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg2_offset)
+	# z2[i] = z_center + z_lift*sin(leg_pace*t[i] - leg2_offset)
 
-	x3[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg3_offset)
-	z3[i] = z_center + z_lift*sin(leg_pace*t[i] - leg3_offset)
+	# x3[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg3_offset)
+	# z3[i] = z_center + z_lift*sin(leg_pace*t[i] - leg3_offset)
 
-	x4[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg4_offset)
-	z4[i] = z_center + z_lift*sin(leg_pace*t[i] - leg4_offset)
+	# x4[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg4_offset)
+	# z4[i] = z_center + z_lift*sin(leg_pace*t[i] - leg4_offset)
 
 
 # function to solve for servo angles Af (femur) and At (tibia)
 
 def getServoAng(x, y, z, ls, lf, lt):
-	if (x<0):
-		Ad = arctan(z/x)
-	else:
-		Ad = pi + arctan(z/x)
 
 	if (y<0):
 		Adxy = arctan(z/y)
@@ -97,8 +93,12 @@ def getServoAng(x, y, z, ls, lf, lt):
 		Adxy = pi + arctan(z/y)
 
 	dxy = sqrt(y**2 + z**2)
-
 	As = Adxy - arccos(ls/dxy)
+
+	if (x<0):
+		Ad = arctan((z-ls*sin(As))/x)
+	else:
+		Ad = pi + arctan((z-ls*sin(As))/x)
 
 	d = sqrt(x**2 + (z-ls*sin(As))**2)
 	Af = Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
@@ -109,15 +109,39 @@ def getServoAng(x, y, z, ls, lf, lt):
 
 # ANIMATION FIGURE
 
-fig = plt.figure()
+figxz = plt.figure()
 plt.axis('equal')
-fig.patch.set_facecolor('w')
+figxz.patch.set_facecolor('w')
 ax = plt.axes(xlim=(-(lf+lt)-lspine,(lf+lt)), ylim=(-(lf+lt),(lf+lt)))
 
-sline1, = ax.plot([],[],lw=5,c='0.7')
-fline1, = ax.plot([],[],lw=5,c='0.7')
-tline1, = ax.plot([],[],lw=5,c='0.7')
-target1, = ax.plot([],[],lw=5,c='b')
+figxy = plt.figure()
+plt.axis('equal')
+figxy.patch.set_facecolor('w')
+ax = plt.axes(xlim=(-(lf+lt)-lspine,(lf+lt)), ylim=(-(lf+lt),(lf+lt)))
+
+figyz = plt.figure()
+plt.axis('equal')
+figyz.patch.set_facecolor('w')
+ax = plt.axes(xlim=(-(lf+lt)-lspine,(lf+lt)), ylim=(-(lf+lt),(lf+lt)))
+
+
+slinexz1, = ax.plot([],[],lw=5,c='0.7')
+flinexz1, = ax.plot([],[],lw=5,c='0.7')
+tlinexz1, = ax.plot([],[],lw=5,c='0.7')
+targetxz1, = ax.plot([],[],lw=5,c='b')
+
+slinexy1, = ax.plot([],[],lw=5,c='0.7')
+flinexy1, = ax.plot([],[],lw=5,c='0.7')
+tlinexy1, = ax.plot([],[],lw=5,c='0.7')
+targetxy1, = ax.plot([],[],lw=5,c='b')
+
+slineyz1, = ax.plot([],[],lw=5,c='0.7')
+flineyz1, = ax.plot([],[],lw=5,c='0.7')
+tlineyz1, = ax.plot([],[],lw=5,c='0.7')
+targetyz1, = ax.plot([],[],lw=5,c='b')
+
+
+
 
 # fline3, = ax.plot([],[],lw=5,c='0.7')
 # tline3, = ax.plot([],[],lw=5,c='0.7')
@@ -133,10 +157,10 @@ target1, = ax.plot([],[],lw=5,c='b')
 # tline4, = ax.plot([],[],lw=6,c='k')
 # target4, = ax.plot([],[],lw=6,c='k')
 
-x_ann_list = []
-z_ann_list = []
-Af_ann_list = []
-At_ann_list = []
+# x_ann_list = []
+# z_ann_list = []
+# Af_ann_list = []
+# At_ann_list = []
 
 # ax.legend([fline1, fline2], ['left legs', 'right legs'], loc='west')
 
@@ -146,10 +170,20 @@ def init():
 
 	# spine.set_data([],[])
 
-	sline1.set_data([],[])
-	fline1.set_data([],[])
-	tline1.set_data([],[])
-	target1.set_data([],[])
+	slinexz1.set_data([],[])
+	flinexz1.set_data([],[])
+	tlinexz1.set_data([],[])
+	targetxz1.set_data([],[])
+
+	slinexy1.set_data([],[])
+	flinexy1.set_data([],[])
+	tlinexy1.set_data([],[])
+	targetxy1.set_data([],[])
+
+	slineyz1.set_data([],[])
+	flineyz1.set_data([],[])
+	tlineyz1.set_data([],[])
+	targetyz1.set_data([],[])
 
 	# fline2.set_data([],[])
 	# tline2.set_data([],[])
@@ -163,7 +197,9 @@ def init():
 	# tline4.set_data([],[])
 	# target4.set_data([],[])
 
-	return sline1, fline1, tline1, target1 #, fline2, tline2, target2, fline3, tline3, target3, fline4, tline4, target4, spine
+	return slinexz1, flinexz1, tlinexz1, targetxz1, \
+			slinexy1, flinexy1, tlinexy1, targetxy1, \
+			slineyz1, flineyz1, tlineyz1, targetyz1
 
 
 def animate(i):
@@ -191,7 +227,7 @@ def animate(i):
 	zt1 = [zf1[1], zf1[1] - lt*sin(angt1[i] + angf1[i])*cos(angs1[i])]
 
 	xtg1 = [x1[i], x1[i]]
-	xtg1 = [y1[i], y1[i]]
+	ytg1 = [y1[i], y1[i]]
 	ztg1 = [z1[i], z1[i]]
 
 	# xf2 = [0, -lf*cos(angf2[i])]
@@ -218,10 +254,20 @@ def animate(i):
 
 	# write calculated position to limb elements in figure
 
-	sline1.set_data(xs1, zs1)
-	fline1.set_data(xf1, zf1)
-	tline1.set_data(xt1, zt1)
-	target1.set_data(xtg1, ztg1)
+	slinexz1.set_data(xs1, zs1)
+	flinexz1.set_data(xf1, zf1)
+	tlinexz1.set_data(xt1, zt1)
+	targetxz1.set_data(xtg1, ztg1)
+
+	slinexy1.set_data(xs1, ys1)
+	flinexy1.set_data(xf1, yf1)
+	tlinexy1.set_data(xt1, yt1)
+	targetxy1.set_data(xtg1, ytg1)
+
+	slineyz1.set_data(ys1, zs1)
+	flineyz1.set_data(yf1, zf1)
+	tlineyz1.set_data(yt1, zt1)
+	targetyz1.set_data(ytg1, ztg1)
 
 	# fline2.set_data(xf2, zf2)
 	# tline2.set_data(xt2, zt2)
@@ -283,9 +329,20 @@ def animate(i):
 	# At_ann_list.append(At_ann)
 
 
- 	return sline1, fline1, tline1, target1, # fline2, tline2, target2, fline3, tline3, target3, fline4, tline4, target4,
+ 	return slinexz1, flinexz1, tlinexz1, targetxz1, \
+ 			slinexy1, flinexy1, tlinexy1, targetxy1, \
+ 			slineyz1, flineyz1, tlineyz1, targetyz1,
 
 
-ani = animation.FuncAnimation(fig, animate, init_func=init, frames = len(t), interval = 20, blit=False)
+anixz = animation.FuncAnimation(figxz, animate, init_func=init, frames = len(t), interval = 20, blit=False)
+
+
+anixy = animation.FuncAnimation(figxy, animate, init_func=init, frames = len(t), interval = 20, blit=False)
+
+aniyz = animation.FuncAnimation(figyz, animate, init_func=init, frames = len(t), interval = 20, blit=False)
 plt.show()
+
+
+
+
 
