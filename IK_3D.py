@@ -220,12 +220,14 @@ if (1==1):
 	tlineyz4, = ax3.plot([],[],lw=5,c='0.4')
 	targetyz4, = ax3.plot([],[],lw=5,c='0.4')
 
-# x_ann_list = []
-# z_ann_list = []
-# Af_ann_list = []
-# At_ann_list = []
+x_ann_list = []
+y_ann_list = []
+z_ann_list = []
+As_ann_list = []
+Af_ann_list = []
+At_ann_list = []
 
-# ax.legend([fline1, fline2], ['left legs', 'right legs'], loc='west')
+ax1.legend([flinexy1, flinexy2], ['left legs', 'right legs'], loc='west')
 
 
 def init():
@@ -400,7 +402,7 @@ def animate(i):
 
 	# write calculated position to limb elements in figure
 
-	if (y==1):
+	if (1==1):
 		slinexz1.set_data(xs1, zs1)
 		flinexz1.set_data(xf1, zf1)
 		tlinexz1.set_data(xt1, zt1)
@@ -468,47 +470,63 @@ def animate(i):
 
 	# create annotations with live updates about foot position and joint angles (for leg 1)
 
-	# x_text = "target x: {:.1f}".format(xtg1[0])
-	# z_text = "target z: {:.1f}".format(ztg1[0])
-	# Af_text = "femur angle: {:.0f}".format(angf1[i]*180/pi)
-	# At_text = "tibia angle: {:.0f}".format(angt1[i]*180/pi)
+	x_text = "target x: {:.1f}".format(xtg1[0])
+	y_text = "target y: {:.1f}".format(ytg1[0])
+	z_text = "target z: {:.1f}".format(ztg1[0])
+	As_text = "shoulder angle: {:.0f}".format(angs1[i]*180/pi)
+	Af_text = "femur angle: {:.0f}".format(angf1[i]*180/pi)
+	At_text = "tibia angle: {:.0f}".format(angt1[i]*180/pi)
 
 
-	# # remove previous annotations
+	# remove previous annotations
 
-	# for j, a in enumerate(z_ann_list):
-	# 	a.remove()
-	# for j, a in enumerate(x_ann_list):
-	# 	a.remove()
-	# for j, a in enumerate(Af_ann_list):
-	# 	a.remove()
-	# for j, a in enumerate(At_ann_list):
-	# 	a.remove()
+	for j, a in enumerate(x_ann_list):
+		a.remove()
+	for j, a in enumerate(y_ann_list):
+		a.remove()
+	for j, a in enumerate(z_ann_list):
+		a.remove()
+	for j, a in enumerate(As_ann_list):
+		a.remove()
+	for j, a in enumerate(Af_ann_list):
+		a.remove()
+	for j, a in enumerate(At_ann_list):
+		a.remove()
 
-	# x_ann_list[:] = []
-	# z_ann_list[:] = []
-	# Af_ann_list[:] = []
-	# At_ann_list[:] = []
+	x_ann_list[:] = []
+	y_ann_list[:] = []
+	z_ann_list[:] = []
+	As_ann_list[:] = []
+	Af_ann_list[:] = []
+	At_ann_list[:] = []
 
 
-	# # apply annotations to figure
+	# apply annotations to figure
 
-	# x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.1, 0.95), textcoords='axes fraction',
- #            horizontalalignment='left', verticalalignment='top')
+	x_ann = plt.annotate(x_text, xy=(0, 0), xytext=(0.1, 0.95), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
 
-	# z_ann = plt.annotate(z_text, xy=(0, 0), xytext=(0.1, 0.9), textcoords='axes fraction',
- #            horizontalalignment='left', verticalalignment='top')
+	y_ann = plt.annotate(y_text, xy=(0, 0), xytext=(0.1, 0.9), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
 
-	# Af_ann = plt.annotate(Af_text, xy=(0, 0), xytext=(0.1, 0.8), textcoords='axes fraction',
- #            horizontalalignment='left', verticalalignment='top')
+	z_ann = plt.annotate(z_text, xy=(0, 0), xytext=(0.1, 0.85), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
 
-	# At_ann = plt.annotate(At_text, xy=(0, 0), xytext=(0.1, 0.75), textcoords='axes fraction',
- #            horizontalalignment='left', verticalalignment='top')
+	As_ann = plt.annotate(As_text, xy=(0, 0), xytext=(0.1, 0.75), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
 
-	# x_ann_list.append(x_ann)
-	# z_ann_list.append(z_ann)
-	# Af_ann_list.append(Af_ann)
-	# At_ann_list.append(At_ann)
+	Af_ann = plt.annotate(Af_text, xy=(0, 0), xytext=(0.1, 0.7), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	At_ann = plt.annotate(At_text, xy=(0, 0), xytext=(0.1, 0.65), textcoords='axes fraction',
+            horizontalalignment='left', verticalalignment='top')
+
+	x_ann_list.append(x_ann)
+	y_ann_list.append(y_ann)
+	z_ann_list.append(z_ann)
+	As_ann_list.append(As_ann)
+	Af_ann_list.append(Af_ann)
+	At_ann_list.append(At_ann)
 
 
  	return slinexz1, flinexz1, tlinexz1, targetxz1, \
