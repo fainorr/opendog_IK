@@ -107,6 +107,7 @@ for i in range(0,len(t)):
 
 def getServoAng(x, y, z, ls, lf, lt, leg):
 
+# by geometry
 	if (y<0):
 		Adxy = arctan(z/y)
 	else:
