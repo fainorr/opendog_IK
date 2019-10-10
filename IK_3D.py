@@ -113,23 +113,31 @@ def getServoAng(x, y, z, ls, lf, lt, leg):
 	else:
 		Adxy = pi + arctan(z/y)
 
-	if (leg == 1 or leg == 3):
-		Adxy = pi-Adxy
-
 	dxy = sqrt(y**2 + z**2)
 	As = Adxy - arccos(ls/dxy)
 
 	if (leg == 1 or leg == 3):
 		As = pi-As
 
-	if (x<0):
-		Ad = arctan((z+ls*sin(As))/x)
-	else:
-		Ad = pi + arctan((z+ls*sin(As))/x)
+		if (x<0):
+			Ad = pi + arctan((z+ls*sin(As))/x)
+		else:
+			Ad = arctan((z+ls*sin(As))/x)
 
-	d = sqrt(x**2 + (z+ls*sin(As))**2)
-	Af = Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
-	At = pi - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+		d = sqrt(x**2 + (z+ls*sin(As))**2)
+		Af = pi-Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
+		At = - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+
+	else:
+		if (x<0):
+			Ad = arctan((z+ls*sin(As))/x)
+		else:
+			Ad = pi + arctan((z+ls*sin(As))/x)
+
+		d = sqrt(x**2 + (z+ls*sin(As))**2)
+		Af = Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
+		At = pi - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+
 
 	return As,Af,At
 
