@@ -86,14 +86,18 @@ for i in range(0,len(t)):
 # function to solve for servo angles Af (femur) and At (tibia)
 
 def getServoAng(x, y, z, ls, lf, lt):
-	alpha = sqrt(x**2+z**2);
-	beta = sqrt(z**2+y**2);
+	alpha = sqrt(y**2+z**2)
+	Ab = arccos(ls/alpha)
+	Adx = atan2(z,y)
+	As = Adx - Ab
 
+	beta = sqrt(x**2+(z+(ls*sin(As)))**2)
+	Ady = atan2((z+ls*sin(As)),x)
+	Alt = arccos((lf**2+beta**2-lt**2)/(2*lf*beta))
+	Af = Ady - Alt
 
-
-	As = Adxy - arccos(ls/dxy)
-	Af = Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
-	At = pi - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+	Al1 = arccos((lf**2+lt**2-beta**2)/(2*lf*lt))
+	At = pi - Al1
 
 	return As,Af,At
 
@@ -274,7 +278,7 @@ def animate(i):
 	# At_ann_list.append(At_ann)
 
 
- 	return sline1, fline1, tline1, target1, # fline2, tline2, target2, fline3, tline3, target3, fline4, tline4, target4,
+	return sline1, fline1, tline1, target1, # fline2, tline2, target2, fline3, tline3, target3, fline4, tline4, target4,
 
 
 ani = animation.FuncAnimation(fig, animate, init_func=init, frames = len(t), interval = 20, blit=False)
