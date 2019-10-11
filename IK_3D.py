@@ -125,8 +125,11 @@ def getServoAng(x, y, z, ls, lf, lt, leg):
 			Ad = arctan((z+ls*sin(As))/x)
 
 		d = sqrt(x**2 + (z+ls*sin(As))**2)
-		Af = pi-Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
-		At = - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+		Af = Ad - arccos((lf**2 + d**2 - lt**2)/(2*lf*d))
+		At = pi - arccos((lf**2 + lt**2 - d**2)/(2*lf*lt))
+
+		Af = pi-Af
+		At = -At
 
 	else:
 		if (x<0):
@@ -186,17 +189,17 @@ targetyz3, = ax3.plot([],[],lw=5,c='0.7')
 slinexz1, = ax1.plot([],[],lw=5,c='0.7')
 flinexz1, = ax1.plot([],[],lw=5,c='0.7')
 tlinexz1, = ax1.plot([],[],lw=5,c='0.7')
-targetxz1, = ax1.plot([],[],lw=5,c='b')
+targetxz1, = ax1.plot([],[],lw=5,c='0.7')
 
+targetxy1, = ax2.plot([],[],lw=5,c='0.4')
 tlinexy1, = ax2.plot([],[],lw=5,c='0.7')
-targetxy1, = ax2.plot([],[],lw=5,c='b')
 flinexy1, = ax2.plot([],[],lw=5,c='0.4')
 slinexy1, = ax2.plot([],[],lw=5,c='0.4')
 
 slineyz1, = ax3.plot([],[],lw=5,c='0.4')
 flineyz1, = ax3.plot([],[],lw=5,c='0.4')
 tlineyz1, = ax3.plot([],[],lw=5,c='0.4')
-targetyz1, = ax3.plot([],[],lw=5,c='b')
+targetyz1, = ax3.plot([],[],lw=5,c='0.4')
 
 
 spinexz, = ax1.plot([],[],lw=8,c='0.5')
@@ -223,17 +226,17 @@ targetyz4, = ax3.plot([],[],lw=5,c='0.7')
 slinexz2, = ax1.plot([],[],lw=5,c='0.4')
 flinexz2, = ax1.plot([],[],lw=5,c='0.4')
 tlinexz2, = ax1.plot([],[],lw=5,c='0.4')
-targetxz2, = ax1.plot([],[],lw=5,c='0.4')
+targetxz2, = ax1.plot([],[],lw=5,c='b')
 
-targetxy2, = ax2.plot([],[],lw=5,c='0.7')
 tlinexy2, = ax2.plot([],[],lw=5,c='0.7')
+targetxy2, = ax2.plot([],[],lw=5,c='b')
 flinexy2, = ax2.plot([],[],lw=5,c='0.4')
 slinexy2, = ax2.plot([],[],lw=5,c='0.4')
 
 slineyz2, = ax3.plot([],[],lw=5,c='0.4')
 flineyz2, = ax3.plot([],[],lw=5,c='0.4')
 tlineyz2, = ax3.plot([],[],lw=5,c='0.4')
-targetyz2, = ax3.plot([],[],lw=5,c='0.4')
+targetyz2, = ax3.plot([],[],lw=5,c='b')
 
 x_ann_list = []
 y_ann_list = []
@@ -357,7 +360,7 @@ def animate(i):
 	zt1 = [zf1[1], zf1[1] - lt*sin(angt1[i] + angf1[i])*cos(angs1[i])]
 
 	xtg1 = [x1[i], x1[i]]
-	ytg1 = [wspine+y1[i], wspine+y1[i]]
+	ytg1 = [wspine-y1[i], wspine-y1[i]]
 	ztg1 = [z1[i], z1[i]]
 
 
@@ -391,7 +394,7 @@ def animate(i):
 	zt3 = [zf3[1], zf3[1] - lt*sin(angt3[i] + angf3[i])*cos(angs3[i])]
 
 	xtg3 = [x3[i]-lspine, x3[i]-lspine]
-	ytg3 = [wspine+y3[i], wspine+y3[i]]
+	ytg3 = [wspine-y3[i], wspine-y3[i]]
 	ztg3 = [z3[i], z3[i]]
 
 
@@ -481,12 +484,12 @@ def animate(i):
 
 	# create annotations with live updates about foot position and joint angles (for leg 1)
 
-	x_text = "target x: {:.1f}".format(xtg1[0])
-	y_text = "target y: {:.1f}".format(ytg1[0])
-	z_text = "target z: {:.1f}".format(ztg1[0])
-	As_text = "shoulder angle: {:.0f}".format(angs1[i]*180/pi)
-	Af_text = "femur angle: {:.0f}".format(angf1[i]*180/pi)
-	At_text = "tibia angle: {:.0f}".format(angt1[i]*180/pi)
+	x_text = "target x: {:.1f}".format(xtg2[0])
+	y_text = "target y: {:.1f}".format(ytg2[0])
+	z_text = "target z: {:.1f}".format(ztg2[0])
+	As_text = "shoulder angle: {:.0f}".format(angs2[i]*180/pi)
+	Af_text = "femur angle: {:.0f}".format(angf2[i]*180/pi)
+	At_text = "tibia angle: {:.0f}".format(angt2[i]*180/pi)
 
 
 	# remove previous annotations
