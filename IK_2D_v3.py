@@ -21,16 +21,16 @@ ls = 5.00 # spine, inches
 gait_duration = 2 # seconds
 leg_pace = 25 # pace of gait
 
-x_center = -0.5
-x_stride = 1.5
+x_center = 1.5
+x_stride = 0.5
 
-z_center = -3.5
+z_center = -4
 z_lift = 0.5
 
-leg1_offset = pi/4		# front left
-leg2_offset = 5*pi/4	# front right
-leg3_offset = 0			# back left
-leg4_offset = pi 		# back right
+leg1_offset = 0			# front left
+leg2_offset = pi		# front right
+leg3_offset = pi		# back left
+leg4_offset = 0 		# back right
 
 
 # initialize: x and z positions for each foot & femur and tibia angles for each leg
