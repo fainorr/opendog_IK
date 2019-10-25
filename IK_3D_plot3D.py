@@ -8,7 +8,6 @@ from matplotlib.animation import FFMpegWriter
 from mpl_toolkits import mplot3d
 
 
-
 # -----------------------
 # INVERSE KINEMATICS: 3-D
 # -----------------------
@@ -28,16 +27,16 @@ lspine = 5.00 # spine, inches
 # -------------------------
 
 gait_duration = 2 # seconds
-leg_pace = 25 # pace of gait
+leg_pace = 50 # pace of gait
 
-x_center = -0.5
+x_center = 0.5
 x_stride = 1
 
 y_center = -1
 y_offset = 0.5
 
-z_center = -3.5
-z_lift = 0.5
+z_center = -4
+z_lift = 1
 
 leg1_offset = 0			# front left
 leg2_offset = pi		# front right
@@ -100,6 +99,12 @@ for i in range(0,len(t)):
 	y4[i] = y_center + y_offset*sin(leg_pace*t[i] - pi - leg4_offset)
 	z4[i] = z_center + z_lift*sin(leg_pace*t[i] - leg4_offset)
 
+	if (z1[i]) < z_center: z1[i] = z_center
+	if (z2[i]) < z_center: z2[i] = z_center
+	if (z3[i]) < z_center: z3[i] = z_center
+	if (z4[i]) < z_center: z4[i] = z_center
+
+
 
 # ---------------------------
 # INVERSE KINEMATICS FUNCTION
@@ -154,6 +159,9 @@ def getServoAng(x, y, z, ls, lf, lt, leg):
 figxyz = plt.figure()
 figxyz.patch.set_facecolor('w')
 ax1 = plt.axes(projection='3d') #, xlim=(-(lf+lt)-lspine,(lf+lt)), ylim=(-(lf+lt),(lf+lt)), zlim=(-(lf+lt),(lf+lt)))
+ax1.set_xlim(-8,2)
+ax1.set_ylim(-4,6)
+ax1.set_zlim(-6,4)
 
 
 # initialize elements in plots
@@ -168,17 +176,17 @@ fline1, = ax1.plot([],[],[],lw=5,c='0.7')
 tline1, = ax1.plot([],[],[],lw=5,c='0.7')
 target1, = ax1.plot([],[],[],lw=5,c='0.7')
 
-spine, = ax1.plot([],[],[],lw=8,c='0.5')
+spine, = ax1.plot([],[],[],lw=20,c='0.5')
 
-sline4, = ax1.plot([],[],lw=5,c='0.4')
-fline4, = ax1.plot([],[],lw=5,c='0.4')
-tline4, = ax1.plot([],[],lw=5,c='0.4')
-target4, = ax1.plot([],[],lw=5,c='0.4')
+sline4, = ax1.plot([],[],[],lw=5,c='0.4')
+fline4, = ax1.plot([],[],[],lw=5,c='0.4')
+tline4, = ax1.plot([],[],[],lw=5,c='0.4')
+target4, = ax1.plot([],[],[],lw=5,c='0.4')
 
-sline2, = ax1.plot([],[],lw=5,c='0.4')
-fline2, = ax1.plot([],[],lw=5,c='0.4')
-tline2, = ax1.plot([],[],lw=5,c='0.4')
-target2, = ax1.plot([],[],lw=5,c='b')
+sline2, = ax1.plot([],[],[],lw=5,c='b')
+fline2, = ax1.plot([],[],[],lw=5,c='b')
+tline2, = ax1.plot([],[],[],lw=5,c='b')
+target2, = ax1.plot([],[],[],lw=5,c='b')
 
 x_ann_list = []
 y_ann_list = []
@@ -192,27 +200,44 @@ At_ann_list = []
 
 def init():
 
-	spine.set_data([],[],[])
+	spine.set_data([],[])
+	spine.set_3d_properties([])
 
-	sline1.set_data([],[],[])
-	fline1.set_data([],[],[])
-	tline1.set_data([],[],[])
-	target1.set_data([],[],[])
+	sline1.set_data([],[])
+	fline1.set_data([],[])
+	tline1.set_data([],[])
+	target1.set_data([],[])
+	sline1.set_3d_properties([])
+	fline1.set_3d_properties([])
+	tline1.set_3d_properties([])
+	target1.set_3d_properties([])
 
-	sline2.set_data([],[],[])
-	fline2.set_data([],[],[])
-	tline2.set_data([],[],[])
-	target2.set_data([],[],[])
+	sline2.set_data([],[])
+	fline2.set_data([],[])
+	tline2.set_data([],[])
+	target2.set_data([],[])
+	sline2.set_3d_properties([])
+	fline2.set_3d_properties([])
+	tline2.set_3d_properties([])
+	target2.set_3d_properties([])
 
-	sline3.set_data([],[],[])
-	fline3.set_data([],[],[])
-	tline3.set_data([],[],[])
-	target3.set_data([],[],[])
+	sline3.set_data([],[])
+	fline3.set_data([],[])
+	tline3.set_data([],[])
+	target3.set_data([],[])
+	sline3.set_3d_properties([])
+	fline3.set_3d_properties([])
+	tline3.set_3d_properties([])
+	target3.set_3d_properties([])
 
-	sline4.set_data([],[],[])
-	fline4.set_data([],[],[])
-	tline4.set_data([],[],[])
-	target4.set_data([],[],[])
+	sline4.set_data([],[])
+	fline4.set_data([],[])
+	tline4.set_data([],[])
+	target4.set_data([],[])
+	sline4.set_3d_properties([])
+	fline4.set_3d_properties([])
+	tline4.set_3d_properties([])
+	target4.set_3d_properties([])
 
 	return sline1, fline1, tline1, target1, sline2, fline2, tline2, target2, \
 			spine, sline3, fline3, tline3, target3, sline4, fline4, tline4, target4
@@ -304,27 +329,45 @@ def animate(i):
 
 	# write calculated position to limb elements in figure
 
-	sline1.set_data(xs1, ys1, zs1)
-	fline1.set_data(xf1, yf1, zf1)
-	tline1.set_data(xt1, yt1, zt1)
-	target1.set_data(xtg1, ytg1, ztg1)
+	sline1.set_data(xs1, ys1)
+	fline1.set_data(xf1, yf1)
+	tline1.set_data(xt1, yt1)
+	target1.set_data(xtg1, ytg1)
+	sline1.set_3d_properties(zs1)
+	fline1.set_3d_properties(zf1)
+	tline1.set_3d_properties(zt1)
+	target1.set_3d_properties(ztg1)
 
-	sline2.set_data(xs2, ys2, zs2)
-	fline2.set_data(xf2, yf2, zf2)
-	tline2.set_data(xt2, yt2, zt2)
-	target2.set_data(xtg2, ytg2, ztg2)
+	sline2.set_data(xs2, ys2)
+	fline2.set_data(xf2, yf2)
+	tline2.set_data(xt2, yt2)
+	target2.set_data(xtg2, ytg2)
+	sline2.set_3d_properties(zs2)
+	fline2.set_3d_properties(zf2)
+	tline2.set_3d_properties(zt2)
+	target2.set_3d_properties(ztg2)
 
-	sline3.set_data(xs3, ys3, zs3)
-	fline3.set_data(xf3, yf3, zf3)
-	tline3.set_data(xt3, yt3, zt3)
-	target3.set_data(xtg3, ytg3, ztg3)
+	sline3.set_data(xs3, ys3)
+	fline3.set_data(xf3, yf3)
+	tline3.set_data(xt3, yt3)
+	target3.set_data(xtg3, ytg3)
+	sline3.set_3d_properties(zs3)
+	fline3.set_3d_properties(zf3)
+	tline3.set_3d_properties(zt3)
+	target3.set_3d_properties(ztg3)
 
-	sline4.set_data(xs4, ys4, zs4)
-	fline4.set_data(xf4, yf4, zf4)
-	tline4.set_data(xt4, yt4, zt4)
-	target4.set_data(xtg4, ytg4, ztg4)
+	sline4.set_data(xs4, ys4)
+	fline4.set_data(xf4, yf4)
+	tline4.set_data(xt4, yt4)
+	target4.set_data(xtg4, ytg4)
+	sline4.set_3d_properties(zs4)
+	fline4.set_3d_properties(zf4)
+	tline4.set_3d_properties(zt4)
+	target4.set_3d_properties(ztg4)
 
-	spine.set_data([-lspine,0],[wspine/2,wspine/2],[0,0])
+	spine.set_data([-lspine,0],[wspine/2,wspine/2])
+	spine.set_3d_properties([0,0])
+
 
 
 	# create annotations with live updates about foot position and joint angles (for leg 1)
@@ -393,7 +436,7 @@ def animate(i):
 
 
 ani = animation.FuncAnimation(figxyz, animate, init_func=init, frames = len(t), interval = 20, blit=False)
-
+plt.show()
 
 
 
