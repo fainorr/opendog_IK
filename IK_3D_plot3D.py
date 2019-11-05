@@ -21,8 +21,8 @@ ls = 1.40 # shoulder offset, inches
 wspine = 2.00 # spine width, inches
 lspine = 5.00 # spine, inches
 
-forward = 0
-turn = 1
+forward = 1
+turn = 0
 swivel = 0
 sit = 0
 
@@ -31,7 +31,7 @@ sit = 0
 # -------------------------
 
 gait_duration = 2 # seconds
-leg_pace = 50 # pace of gait
+leg_pace = 80 # pace of gait
 
 if (forward == 1):
 	x_center = 0.5
@@ -452,12 +452,12 @@ def animate(i):
 
 	# create annotations with live updates about foot position and joint angles (for leg 1)
 
-	x_text = "target x: {:.1f}".format(xtg2[0])
-	y_text = "target y: {:.1f}".format(ytg2[0])
-	z_text = "target z: {:.1f}".format(ztg2[0])
-	As_text = "shoulder angle: {:.0f}".format(angs2[i]*180/pi)
-	Af_text = "femur angle: {:.0f}".format(angf2[i]*180/pi)
-	At_text = "tibia angle: {:.0f}".format(angt2[i]*180/pi)
+	x_text = "target x: {:.1f}".format(xtg1[0])
+	y_text = "target y: {:.1f}".format(ytg1[0])
+	z_text = "target z: {:.1f}".format(ztg1[0])
+	As_text = "shoulder angle: {:.0f}".format(angs1[i]*180/pi)
+	Af_text = "femur angle: {:.0f}".format(angf1[i]*180/pi)
+	At_text = "tibia angle: {:.0f}".format(angt1[i]*180/pi)
 
 
 	# remove previous annotations
