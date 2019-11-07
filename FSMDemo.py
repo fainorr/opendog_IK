@@ -76,3 +76,27 @@ SLeft = L || M
 
 # Block 4
 
+if Forward:
+	action = "forward"
+
+if Back:
+	action = "backward"
+
+if SLeft:
+	action = "sideways"
+	direction = "left"
+
+if SRight:
+	action = "sideways"
+	direction = "right"
+
+if TLeft:
+	action = "turn"
+	direction = "left"
+
+if TRight:
+	action = "turn"
+	direction = "right"
+
+if Wait:
+	action = "wait"
