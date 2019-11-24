@@ -24,17 +24,17 @@ lspine = 5.00 # spine, inches
 
 # ACTION CHOICES: forward, turn, swivel, sideways, jump
 
-action = "turn"
+action = "forward"
 
 # -------------------------
 # establish gait parameters
 # -------------------------
 
 gait_duration = 2 # seconds
-leg_pace = 80 # pace of gait
+leg_pace = 120 # pace of gait
 
 if (action == "forward"):
-	leg_pace = 80 # pace of gait
+	leg_pace = 120 # pace of gait
 
 	x_center = 0.5
 	x_stride = 1
