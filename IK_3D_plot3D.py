@@ -22,9 +22,9 @@ wspine = 2.00 # spine width, inches
 lspine = 5.00 # spine, inches
 
 
-# ACTION CHOICES: forward, turn, swivel, sideways, jump
+# ACTION CHOICES: forward, turn, swivel, sideways, down
 
-action = "forward"
+action = "down"
 
 # -------------------------
 # establish gait parameters
@@ -95,18 +95,12 @@ elif (action == "sideways"):
 	leg3_offset = pi/2			# back left
 	leg4_offset = 3*pi/2 		# back right
 
-elif (action == "jump"):
+elif (action == "down"):
 	leg_pace = 100 # pace of gait
 
-	x_center_front = 0.5
-	x_center_back = -0.5
-	x_stride = 0
-
+	x_center = 1.3
 	y_center = -1
-	y_offset = 0
-
-	z_center = -3
-	z_lift = -2.2
+	z_center = -2.7
 
 	leg1_offset = 0			# front left
 	leg2_offset = 0			# front right
@@ -242,29 +236,23 @@ for i in range(0,len(t)):
 		if (z3[i]) < z_center: z3[i] = z_center
 		if (z4[i]) < z_center: z4[i] = z_center
 
-	elif (action == "jump"):
-		x1[i] = x_center_front
+	elif (action == "down"):
+		x1[i] = x_center
 		y1[i] = y_center
 
-		x2[i] = x_center_front
+		x2[i] = x_center
 		y2[i] = y_center
 
-		x3[i] = x_center_back
+		x3[i] = x_center
 		y3[i] = y_center
 
-		x4[i] = x_center_back
+		x4[i] = x_center
 		y4[i] = y_center
-		
-		if (i<250):
-			z1[i] = z_center
-			z2[i] = z_center
-			z3[i] = z_center
-			z4[i] = z_center
-		else:
-			z1[i] = z_center + z_lift
-			z2[i] = z_center + z_lift
-			z3[i] = z_center + z_lift
-			z4[i] = z_center + z_lift
+
+		z1[i] = z_center
+		z2[i] = z_center
+		z3[i] = z_center
+		z4[i] = z_center
 
 
 
