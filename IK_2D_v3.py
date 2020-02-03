@@ -21,10 +21,10 @@ ls = 5.00 # spine, inches
 gait_duration = 2 # seconds
 leg_pace = 25 # pace of gait
 
-x_center = 1.5
+x_center = 0
 x_stride = 0.5
 
-z_center = -4
+z_center = -3
 z_lift = 0.5
 
 leg1_offset = 0			# front left
