@@ -6,8 +6,7 @@ from math import *
 import time
 from matplotlib import pyplot as plt
 
-# tell the code how the distance vector will be defined:
-# by "lidar scan" or by "random vector"
+# define the distance by "lidar scan" or by "random vector"
 set_distances_by = "lidar scan"
 
 # specify the type of plot ("polar" or "cartesian")
@@ -21,8 +20,8 @@ angles = arange(-pi, pi, pi/180)
 if set_distances_by == "lidar scan":
 
 	distances = zeros(len(angles))
-	with open('lidar_sample_scan.txt', 'r') as f:
-		distances = f.read().split(', ')
+	with open('lidar_sample_scan_2.txt', 'r') as f:
+		distances = f.read().split(',')
 
 	for i in range(0,len(angles)):
 		distances[i] = round(float(distances[i]),5)
