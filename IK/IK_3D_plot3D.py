@@ -2,7 +2,7 @@
 from numpy import *
 from math import *
 import time
-from matplotlib import pyplot as plt 
+from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FFMpegWriter
 from mpl_toolkits import mplot3d
@@ -147,7 +147,7 @@ angt4 = zeros(len(t))
 # develop functions for foot positions for given gait
 
 for i in range(0,len(t)):
-	
+
 	if (action == "forward"):
 		x1[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg1_offset)
 		y1[i] = y_center + y_offset*sin(leg_pace*t[i] - pi - leg1_offset)
@@ -587,7 +587,3 @@ def animate(i):
 
 ani = animation.FuncAnimation(figxyz, animate, init_func=init, frames = len(t), interval = 20, blit=False)
 plt.show()
-
-
-
-
