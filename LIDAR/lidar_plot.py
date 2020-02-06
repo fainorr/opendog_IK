@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 # define the distance by "lidar scan" or by "random vector"
 set_distances_by = "lidar scan"
 
-# specify the type of plot ("polar" or "cartesian")
+# specify the type of plot as "polar" or "cartesian"
 plot_in = "cartesian"
 
 
