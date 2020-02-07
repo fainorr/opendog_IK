@@ -2,7 +2,7 @@
 from numpy import *
 from math import *
 import time
-from matplotlib import pyplot as plt 
+from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FFMpegWriter
 
@@ -260,4 +260,3 @@ def animate(i):
 
 ani = animation.FuncAnimation(fig, animate, init_func=init, frames = len(t), interval = 20, blit=False)
 plt.show()
-
