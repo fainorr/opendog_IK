@@ -35,8 +35,7 @@ num_samples = len(strings)
 laser_scan = [[0]*msg_values]*num_samples
 
 for i in range(0,num_samples):
-	laser_scan[i][:] = strings[i].split(',')
-	laser_scan[i][:]
+	laser_scan[i][0:msg_values] = strings[i].split(',')
 
 print(laser_scan[1][:])
 print(laser_scan[4][:])
