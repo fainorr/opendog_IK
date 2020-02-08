@@ -16,58 +16,36 @@ scan_data = 'LIDAR/hallway234.txt'
 
 
 # --- PROCESS SCAN DATA ---
-# pull text file into a vector "strings" with the laser scan message
-# at each point in time as a list
+# pull text file into an array "laser_scan" of integers
+# laser_scan[i][j] where i = time and j = value within message
 
-strings = []
+laser_scan = zeros(731)
 
 with open(scan_data) as f:
 	for line_num, line in enumerate(f):
 		if line_num > 0:
-			strings.append(line)
+			nums = []
+			linestrip = line.strip()
+			linesplit = line.split(',')
+			for k in range(0,len(linesplit)):
 
-# for each point in time, separate laser scan message into integer values
-# index i (rows) for time and index j (columns) for laser scan value
+				try:
+					nums = append(nums,float(linesplit[k]))
+				except:
+					nums = append(nums,0)
 
-msg_values = strings[0].count(',')+1
-num_samples = len(strings)
+			laser_scan = vstack((laser_scan,nums))
 
-laser_scan = [[0]*msg_values]*num_samples
+msg_values = len(laser_scan[0])
+num_samples = len(laser_scan)
 
-for i in range(0,num_samples):
-	laser_scan[i][0:msg_values] = strings[i].split(',')
+# extract angle values from laser_scan
 
-print(laser_scan[1][:])
-print(laser_scan[4][:])
-
-for i in range(0,num_samples):
-	for j in range(0,msg_values):
-		if j == 3:
-			laser_scan[i][j] = 0
-		else:
-			laser_scan[i][j] = float(laser_scan[i][j])
-
-print(laser_scan[1][11:])
-print(laser_scan[4][11:])
-
-# extract angle and range values from laser_scan
-
-time = zeros(num_samples)
 angle_min = laser_scan[1][4]
 angle_max = laser_scan[1][5]
 angle_incr = laser_scan[1][6]
-# angles = arange(angle_min, angle_max, angle_incr)
 
 angles = zeros(360)
-distances = [[0]*msg_values]*360
-
-for i in range(0,num_samples):
-	time[i] = i/10.0
-	distances[i][:] = laser_scan[i][11:371]
-
-for i in range(0,num_samples):
-	for j in range(0,360):
-		if distances[i][j] == inf: distances[i][j] = 0.0
 
 for j in range(0,360):
 	angles[j] = angle_min + angle_incr*j
@@ -75,13 +53,20 @@ for j in range(0,360):
 
 # --- CONVERT TO X,Y ---
 
-x_pos = [[0]*msg_values]*360
-y_pos = [[0]*msg_values]*360
+x_pos = zeros(360)
+y_pos = zeros(360)
 
 for i in range(0,num_samples):
+	x_pos_now = []
+	y_pos_now = []
+
 	for j in range(0,360):
-		x_pos[i][j] = distances[i][j]*cos(angles[j])
-		y_pos[i][j] = distances[i][j]*sin(angles[j])
+
+		x_pos_now = append(x_pos_now,laser_scan[i][j+11]*cos(angles[j]))
+		y_pos_now = append(y_pos_now,laser_scan[i][j+11]*sin(angles[j]))
+
+	x_pos = vstack((x_pos,x_pos_now))
+	y_pos = vstack((y_pos,y_pos_now))
 
 
 # --- ANIMATION FIGURE ---
@@ -100,6 +85,6 @@ def animate(i):
 	scatter.set_offsets(c_[x_pos[i][:],y_pos[i][:]])
 	return(scatter)
 
-ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 2, blit=False)
+ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 5, blit=False)
 
 plt.show()
