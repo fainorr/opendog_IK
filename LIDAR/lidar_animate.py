@@ -12,7 +12,7 @@ from matplotlib.animation import FFMpegWriter
 plot_in = "cartesian"
 
 # call specific laser scan file
-scan_data = 'LIDAR/hallway234.txt'
+scan_data = 'LIDAR/corner208.txt'
 
 
 # --- PROCESS SCAN DATA ---
