@@ -10,10 +10,10 @@ from matplotlib import pyplot as plt
 set_distances_by = "lidar scan"
 
 # specify the type of plot as "polar" or "cartesian"
-plot_in = "cartesian"
+plot_in = "polar"
 
 # specify if the scan data is one "snapshot" in time or "continuous"
-scan_type = "continuous"
+scan_type = "snapshot"
 
 # call specific laser scan file
 scan_data = 'LIDAR/hallway234.txt'
