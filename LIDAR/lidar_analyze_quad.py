@@ -43,14 +43,12 @@ for quad in range(0,4):
     quad_check = zeros((90-obst_size,1))
 
     for j in range(90*quad, 90*(quad+1) - obst_size):
-        print(j)
-        print(quad)
         scan_obst_size = 0
 
         for k in range(0,obst_size):
             if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
 
-        # print(scan_obst_size)
+        print(scan_obst_size)
         if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
 
     if sum(quad_check >= 1): quad_obstacles[quad] = 1
