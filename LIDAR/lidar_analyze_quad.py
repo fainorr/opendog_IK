@@ -26,8 +26,8 @@ for i in range(0,len(angles)):
 
 # analyze scan data
 
-obst_size = 4;         # number of consecutive dots
-safe_range = 0.5;      # search ranges for obstacles
+obst_size = 4           # number of consecutive dots
+safe_range = 0.5        # search ranges for obstacles
 
 quad_obstacles = [0,0,0,0]
 
