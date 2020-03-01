@@ -16,7 +16,7 @@ plot_in = "polar"
 scan_type = "snapshot"
 
 # call specific laser scan file
-scan_data = 'LIDAR/hallway234.txt'
+scan_data = 'LIDAR/lidar_sample_scan.txt'
 
 
 if scan_type == "snapshot":

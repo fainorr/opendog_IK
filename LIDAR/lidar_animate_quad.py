@@ -1,5 +1,5 @@
 
-# Plot lidar-like data in polar coordinates
+# Plot lidar data in and analyze in quadrants for obstacles
 
 from numpy import *
 from math import *
@@ -9,14 +9,11 @@ from matplotlib import animation
 from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
 
-# specify the type of plot as "polar" or "cartesian"
-plot_in = "cartesian"
-
 # call specific laser scan file
 scan_data = 'LIDAR/hallway234.txt'
 
-obst_size = 4           # number of consecutive dots
-safe_range = 1.5        # search ranges for obstacles
+# CHOOSE ANALYSIS METHOD as "quadrant" or "intensity"
+method = "intensity"
 
 
 # --- PROCESS SCAN DATA ---
@@ -84,7 +81,11 @@ for i in range(0,num_samples):
 
 # --- ANALYZE SCAN ---
 
+obst_size = 4           # number of consecutive dots
+safe_range = 1.5        # search ranges for obstacles
+
 quad_obstacles = zeros((num_samples,4))
+obst_intensity = zeros((num_samples,4))
 
 for i in range(0,num_samples):
 	distances = zeros(360)
@@ -97,18 +98,27 @@ for i in range(0,num_samples):
 	distances[0:45] = distances[315:360]
 	distances[46:360] = distances[0:314]
 
-	for quad in range(0,4):
-	    quad_check = zeros((90-obst_size,1))
+	if method == "quadrant":
+		for quad in range(0,4):
+		    quad_check = zeros((90-obst_size,1))
 
-	    for j in range(90*quad, 90*(quad+1) - obst_size):
-	        scan_obst_size = 0
+		    for j in range(90*quad, 90*(quad+1) - obst_size):
+		        scan_obst_size = 0
 
-	        for k in range(0,obst_size):
-	            if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
+		        for k in range(0,obst_size):
+		            if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
 
-	        if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
+		        if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
 
-	    if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
+		    if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
+
+	elif method == "intensity":
+		quad_points = [0.,0.,0.,0.]
+		for quad in range(0,4):
+			for j in range(90*quad, 90*(quad+1)):
+				if distances[j] == 1: quad_points[quad] = quad_points[quad] + 1
+
+		obst_intensity[i] = quad_points/sum(quad_points)
 
 
 # --- PREPARE FOR PLOT ---
@@ -177,10 +187,18 @@ def animate(i):
 	range_circle.set_data(circle_x, circle_y)
 
 	# create annotations with live updates about quadrants
-	front_text = "front: {:.0f}".format(quad_obstacles[i][3])
-	right_text = "right: {:.0f}".format(quad_obstacles[i][2])
-	back_text = "back: {:.0f}".format(quad_obstacles[i][1])
-	left_text = "left: {:.0f}".format(quad_obstacles[i][0])
+
+	if method == "quadrant":
+		front_text = "front: {:.0f}".format(quad_obstacles[i][3])
+		right_text = "right: {:.0f}".format(quad_obstacles[i][2])
+		back_text = "back: {:.0f}".format(quad_obstacles[i][1])
+		left_text = "left: {:.0f}".format(quad_obstacles[i][0])
+
+	elif method == "intensity":
+		front_text = "front: {:.2f}".format(obst_intensity[i][3])
+		right_text = "right: {:.2f}".format(obst_intensity[i][2])
+		back_text = "back: {:.2f}".format(obst_intensity[i][1])
+		left_text = "left: {:.2f}".format(obst_intensity[i][0])
 
 	for j, a in enumerate(front_list): a.remove()
 	for j, a in enumerate(right_list): a.remove()
@@ -193,13 +211,13 @@ def animate(i):
 	left_list[:] = []
 
 	front_ann = plt.annotate(front_text, xy=(0, 0), xytext=(0.5, 0.95), textcoords='axes fraction',
-            horizontalalignment='left', verticalalignment='top')
+            horizontalalignment='center', verticalalignment='top')
 
 	right_ann = plt.annotate(right_text, xy=(0, 0), xytext=(0.85, 0.5), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
 
 	back_ann = plt.annotate(back_text, xy=(0, 0), xytext=(0.5, 0.1), textcoords='axes fraction',
-            horizontalalignment='left', verticalalignment='top')
+            horizontalalignment='center', verticalalignment='top')
 
 	left_ann = plt.annotate(left_text, xy=(0, 0), xytext=(0.05, 0.5), textcoords='axes fraction',
             horizontalalignment='left', verticalalignment='top')
