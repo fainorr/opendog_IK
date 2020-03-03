@@ -1,31 +1,39 @@
+
 from numpy import *
 from math import *
 
-L1 = 16 # inches
-L2 = 20 # inches
-L3 = 5 # inches
+L1 = 16.0   # inches
+L2 = 20.0   # inches
+L3 = 5.0    # inches
 
-x = 20
-z = 15
+x = 20.0
+y = 6.0
+z = 15.0
 
 
 # inverse kinematics
 
+d_xy = sqrt(x**2 + y**2)
+A0 = arcsin(y/d_xy)
+
+xp = d_xy
+
 if (x>0):
-    Ad = arctan(z/(x-L3))
+    Ad = arctan(z/(xp-L3))
 else:
-    Ad = pi + arctan(z/(x-L3))
+    Ad = pi + arctan(z/(xp-L3))
 
-d = sqrt((x-L3)**2 + z**2)
+d_xz = sqrt((xp-L3)**2 + z**2)
 
-A1 = Ad + arccos((L1**2 + d**2 - L2**2)/(2*L1*d))
-A2 = arccos((L1**2 + L2**2 - d**2)/(2*L1*L2))
+A1 = Ad + arccos((L1**2 + d_xz**2 - L2**2)/(2*L1*d_xz))
+A2 = arccos((L1**2 + L2**2 - d_xz**2)/(2*L1*L2))
 A3 = 2*pi - A1 - A2
 
 
 # forward kinematics
 
-x_check = L1*cos(A1) + L2*cos(A1+A2-pi) + L3
+x_check = (L1*cos(A1) + L2*cos(A1+A2-pi) + L3)*cos(A0)
+y_check = (L1*cos(A1) + L2*cos(A1+A2-pi) + L3)*sin(A0)
 z_check = L1*sin(A1) + L2*sin(A1+A2-pi)
 
 
@@ -45,5 +53,5 @@ z_check = L1*sin(A1) + L2*sin(A1+A2-pi)
 #
 # A3 = pi - AT4
 
-print(A1*180/pi,A2*180/pi,A3*180/pi)
-print(x_check,z_check)
+print(A0*180/pi,A1*180/pi,A2*180/pi,A3*180/pi)
+print(x_check,y_check,z_check)
