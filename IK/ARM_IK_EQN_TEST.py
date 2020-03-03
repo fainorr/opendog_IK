@@ -18,10 +18,10 @@ AT3 = arccos((x**2 - x*L3 + z**2)/(LT1*LT2))
 A1 = AT1 + AT2 + AT3
 A2 = arccos((L1**2 + L2**2 - LT1**2)/(2*L1*L2))
 
-AT5 = 180 - AT1 - A2
+AT5 = pi - AT1 - A2
 AT6 = arcsin(z/LT1)
 AT4 = AT6 - AT5
 
-A3 = 180 - AT4
+A3 = pi - AT4
 
-return A1,A2,A3
+print(A1*180/pi,A2*180/pi,A3*180/pi)
