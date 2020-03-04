@@ -23,7 +23,7 @@ d_poke = 10.0
 
 x_final = 20.0
 y_final = 5.0
-z_final = 10.0
+z_final = 20.0
 
 x_start = x_final - d_poke*cos(arctan(y_final/x_final))
 y_start = y_final - d_poke*sin(arctan(y_final/x_final))
@@ -83,8 +83,8 @@ ax.set_zlim(0,40)
 limb1, = ax.plot([],[],[],lw=5,c='xkcd:blue green')
 limb2, = ax.plot([],[],[],lw=5,c='xkcd:blue green')
 limb3, = ax.plot([],[],[],lw=5,c='xkcd:blue green')
-target = ax.scatter([],[],[],s=100,c='xkcd:desert')
-button = ax.scatter([],[],[],s=50,c='xkcd:slate', marker="s")
+target, = ax.plot([],[],[],lw=5,c='xkcd:desert', marker="o")
+button, = ax.plot([],[],[],lw=5,c='xkcd:slate', marker="s")
 
 x_list = []
 y_list = []
@@ -102,8 +102,12 @@ def init():
 	limb1.set_3d_properties([])
 	limb2.set_3d_properties([])
 	limb3.set_3d_properties([])
-	target.set_offsets([x[0],y[0],z[0]])
-	button.set_offsets([x_final,y_final,z_final])
+
+	target.set_data([x[0],y[0]])
+	target.set_3d_properties(z[0])
+
+	button.set_data([x_final,y_final])
+	button.set_3d_properties(z_final)
 
 	return limb1, limb2, limb3, target, button
 
@@ -136,8 +140,11 @@ def animate(i):
 	limb2.set_3d_properties(limb2_z)
 	limb3.set_3d_properties(limb3_z)
 
-	target.set_offsets([x[i],y[i],z[i]])
-	button.set_offsets([x_final,y_final,z_final])
+	target.set_data([x[i],y[i]])
+	target.set_3d_properties(z[i])
+
+	button.set_data([x_final,y_final])
+	button.set_3d_properties(z_final)
 
 
 	# create annotations
