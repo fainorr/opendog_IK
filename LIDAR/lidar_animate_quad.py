@@ -155,7 +155,7 @@ for i in range(0,num_samples):
 
 # --- ANIMATION FIGURE ---
 
-fig = plt.figure()
+fig = plt.figure(figsize=(6,6))
 plt.axis('equal')
 fig.patch.set_facecolor('w')
 ax = plt.axes(xlim=(-10,10),ylim=(-10,10))
