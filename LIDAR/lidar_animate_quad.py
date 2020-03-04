@@ -12,8 +12,8 @@ from matplotlib.animation import FFMpegWriter
 # call specific laser scan file
 scan_data = 'LIDAR/hallway234.txt'
 
-# CHOOSE ANALYSIS METHOD as "quadrant" or "intensity"
-method = "intensity"
+# CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
+method = "percent"
 
 
 # --- PROCESS SCAN DATA ---
@@ -72,61 +72,93 @@ for i in range(0,num_samples):
 
 		r_now = append(r_now,laser_scan[i][j+11])
 
+	# stack onto previous times
 	x_pos = vstack((x_pos,x_pos_now))
 	y_pos = vstack((y_pos,y_pos_now))
 
 	r_pos = vstack((r_pos,r_now))
 	a_pos = vstack((a_pos,angles))
 
-
 # --- ANALYZE SCAN ---
 
-obst_size = 4           # number of consecutive dots
-safe_range = 1.5        # search ranges for obstacles
+obst_size = 5           # number of consecutive dots
+safe_range = 1.5         # search ranges for obstacles
 
 quad_obstacles = zeros((num_samples,4))
+obst_percent = zeros((num_samples,4))
 obst_intensity = zeros((num_samples,4))
+quad_points = zeros((num_samples,4))
 
 for i in range(0,num_samples):
 	distances = zeros(360)
 
-	for j in range(0,len(distances)):
-	    if r_pos[i][j] > safe_range: distances[j] = 0
-	    else: distances[j] = 1
+	if (method == "quadrant") or (method == "percent"):
+		for j in range(0,len(distances)):
+			if r_pos[i][j] > safe_range: distances[j] = 0
+			else: distances[j] = 1
+
+	elif method == "intensity":
+		for j in range(0,len(distances)):
+			distances[j] = r_pos[i][j]
 
 	# reorder distances vector to reflect quadrants of interest
-	distances[0:45] = distances[315:360]
-	distances[46:360] = distances[0:314]
+	first_sect = distances[315:360]
+	second_sect = distances[0:315]
+
+	distances = zeros(360)
+
+	distances[0:45] = first_sect
+	distances[45:360] = second_sect
+
+	# analyze four quadrants [left, back, right, front]
 
 	if method == "quadrant":
 		for quad in range(0,4):
-		    quad_check = zeros((90-obst_size,1))
+			quad_check = zeros((90-obst_size,1))
 
-		    for j in range(90*quad, 90*(quad+1) - obst_size):
-		        scan_obst_size = 0
+			for j in range(90*quad, 90*(quad+1) - obst_size):
+				scan_obst_size = 0
 
-		        for k in range(0,obst_size):
-		            if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
+				for k in range(0,obst_size):
+					if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
 
-		        if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
+				if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
 
-		    if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
+			if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
 
-	elif method == "intensity":
+	elif method == "percent":
 		quad_points = [0.,0.,0.,0.]
 		for quad in range(0,4):
 			for j in range(90*quad, 90*(quad+1)):
 				if distances[j] == 1: quad_points[quad] = quad_points[quad] + 1
 
-		obst_intensity[i] = quad_points/sum(quad_points)
+		obst_percent[i] = quad_points/sum(quad_points)*100
+
+	elif method == "intensity":
+		safe_range = 15         # search ranges for obstacles
+
+		quad_points[i] = [0.,0.,0.,0.]
+		for quad in range(0,4):
+			for j in range(90*quad, 90*(quad+1)):
+				if distances[j] != inf:
+					quad_points[i][quad] = quad_points[i][quad] + distances[j]**2
+
+		for quad in range(0,4):
+			if quad_points[i][quad] > 0:
+				obst_intensity[i][quad] = sum(quad_points[i][:])/quad_points[i][quad]
+			else:
+				obst_intensity[i][quad] = inf
+
+		total_obst_intensity = sum(obst_intensity[i][:])
+		
+		for quad in range(0,4):
+			obst_intensity[i][quad] = obst_intensity[i][quad]/total_obst_intensity*100
 
 
 # --- PREPARE FOR PLOT ---
 
-ref_1x = [-10,10]
-ref_1y = [-10,10]
-ref_2x = [-10,10]
-ref_2y = [10,-10]
+ref_a = [-10,10]
+ref_b = [10,-10]
 
 circle_r = safe_range*ones(720)
 circle_a = arange(0,360,0.5)
@@ -182,8 +214,8 @@ def init():
 def animate(i):
 	scatter.set_offsets(c_[x_pos[i][:],y_pos[i][:]])
 	scatter_close.set_offsets(c_[x_pos_close[i][:],y_pos_close[i][:]])
-	ref_1.set_data(ref_1x, ref_1y)
-	ref_2.set_data(ref_2x, ref_2y)
+	ref_1.set_data(ref_a, ref_a)
+	ref_2.set_data(ref_a, ref_b)
 	range_circle.set_data(circle_x, circle_y)
 
 	# create annotations with live updates about quadrants
@@ -194,11 +226,17 @@ def animate(i):
 		back_text = "back: {:.0f}".format(quad_obstacles[i][1])
 		left_text = "left: {:.0f}".format(quad_obstacles[i][0])
 
+	elif method == "percent":
+		front_text = "front: {:.0f}%".format(obst_percent[i][3])
+		right_text = "right: {:.0f}%".format(obst_percent[i][2])
+		back_text = "back: {:.0f}%".format(obst_percent[i][1])
+		left_text = "left: {:.0f}%".format(obst_percent[i][0])
+
 	elif method == "intensity":
-		front_text = "front: {:.2f}".format(obst_intensity[i][3])
-		right_text = "right: {:.2f}".format(obst_intensity[i][2])
-		back_text = "back: {:.2f}".format(obst_intensity[i][1])
-		left_text = "left: {:.2f}".format(obst_intensity[i][0])
+		front_text = "front: {:.0f}%".format(obst_intensity[i][3])
+		right_text = "right: {:.0f}%".format(obst_intensity[i][2])
+		back_text = "back: {:.0f}%".format(obst_intensity[i][1])
+		left_text = "left: {:.0f}%".format(obst_intensity[i][0])
 
 	for j, a in enumerate(front_list): a.remove()
 	for j, a in enumerate(right_list): a.remove()
@@ -211,16 +249,16 @@ def animate(i):
 	left_list[:] = []
 
 	front_ann = plt.annotate(front_text, xy=(0, 0), xytext=(0.5, 0.95), textcoords='axes fraction',
-            horizontalalignment='center', verticalalignment='top')
+			horizontalalignment='center', verticalalignment='top')
 
 	right_ann = plt.annotate(right_text, xy=(0, 0), xytext=(0.85, 0.5), textcoords='axes fraction',
-            horizontalalignment='left', verticalalignment='top')
+			horizontalalignment='left', verticalalignment='top')
 
 	back_ann = plt.annotate(back_text, xy=(0, 0), xytext=(0.5, 0.1), textcoords='axes fraction',
-            horizontalalignment='center', verticalalignment='top')
+			horizontalalignment='center', verticalalignment='top')
 
 	left_ann = plt.annotate(left_text, xy=(0, 0), xytext=(0.05, 0.5), textcoords='axes fraction',
-            horizontalalignment='left', verticalalignment='top')
+			horizontalalignment='left', verticalalignment='top')
 
 	front_list.append(front_ann)
 	right_list.append(right_ann)
