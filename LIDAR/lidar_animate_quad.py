@@ -10,11 +10,13 @@ from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
 
 # call specific laser scan file
-scan_data = 'LIDAR/hallway234.txt'
+scan_data = 'LIDAR/corner208.txt'
 
 # CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
 method = "percent"
 
+obst_size = 5           # number of consecutive dots
+safe_range = 2.0         # search ranges for obstacles
 
 # --- PROCESS SCAN DATA ---
 # pull text file into an array "laser_scan" of integers
@@ -80,9 +82,6 @@ for i in range(0,num_samples):
 	a_pos = vstack((a_pos,angles))
 
 # --- ANALYZE SCAN ---
-
-obst_size = 5           # number of consecutive dots
-safe_range = 1.5         # search ranges for obstacles
 
 quad_obstacles = zeros((num_samples,4))
 obst_percent = zeros((num_samples,4))
@@ -150,7 +149,7 @@ for i in range(0,num_samples):
 				obst_intensity[i][quad] = inf
 
 		total_obst_intensity = sum(obst_intensity[i][:])
-		
+
 		for quad in range(0,4):
 			obst_intensity[i][quad] = obst_intensity[i][quad]/total_obst_intensity*100
 
@@ -193,10 +192,10 @@ fig.patch.set_facecolor('w')
 ax = plt.axes(xlim=(-10,10),ylim=(-10,10))
 
 scatter = ax.scatter([],[],s=5,c='xkcd:light navy')
-scatter_close = ax.scatter([],[],s=5,c='xkcd:scarlet')
+scatter_close = ax.scatter([],[],s=5,c='xkcd:yellow orange')
 ref_1, = ax.plot([],[],lw=1,c='xkcd:bluish grey',ls='--')
 ref_2, = ax.plot([],[],lw=1,c='xkcd:bluish grey',ls='--')
-range_circle, = ax.plot([],[],lw=1,c='xkcd:scarlet',ls='--')
+range_circle, = ax.plot([],[],lw=1,c='xkcd:yellow orange',ls='--')
 
 front_list = []
 right_list = []
@@ -268,6 +267,6 @@ def animate(i):
 	return(scatter, scatter_close, ref_1, ref_2, range_circle)
 
 
-ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 5, blit=False)
+ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 50, blit=False)
 
 plt.show()

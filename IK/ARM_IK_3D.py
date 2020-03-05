@@ -16,38 +16,59 @@ L1 = 16.0 	# piece connected to base, inches
 L2 = 20.0 	# middle piece, inches
 L3 = 5.0 	# end/tip, inches
 
-gait_duration = 2 # seconds
-pace = 25.0
+gait_duration = 2.0 # seconds
+pace = 12.0
 
-d_poke = 10.0
+x_start = 10.0
+y_start = 0.0
+z_start = 15.0
 
 x_final = 20.0
 y_final = 5.0
 z_final = 20.0
 
-x_start = x_final - d_poke*cos(arctan(y_final/x_final))
-y_start = y_final - d_poke*sin(arctan(y_final/x_final))
+# x_start = x_final - d_poke*cos(arctan(y_final/x_final))
+# y_start = y_final - d_poke*sin(arctan(y_final/x_final))
 
-t = linspace(0,gait_duration,1000)
-x = zeros(len(t))
-y = zeros(len(t))
-z = zeros(len(t))
-ang0 = zeros(len(t))
-ang1 = zeros(len(t))
-ang2 = zeros(len(t))
-ang3 = zeros(len(t))
+theta = linspace(0,2*pi,101)
+x = zeros(len(theta))
+y = zeros(len(theta))
+z = zeros(len(theta))
+ang0 = zeros(len(theta))
+ang1 = zeros(len(theta))
+ang2 = zeros(len(theta))
+ang3 = zeros(len(theta))
+
+for i in range(0,len(theta)):
+
+	if theta[i] < pi/2:
+		x[i] = x_start + (x_start*cos(arctan(y_final/x_final))-x_start)*sin(theta[i])
+		y[i] = y_start + (x_start*sin(arctan(y_final/x_final))-y_start)*sin(theta[i])
+		z[i] = z_start + (z_final-z_start)*sin(theta[i])
+
+	elif (theta[i] >= pi/2) and (theta[i] < pi):
+		x_mid = x_start + (x_start*cos(arctan(y_final/x_final))-x_start)
+		y_mid = y_start + (x_start*sin(arctan(y_final/x_final))-y_start)
+
+		x[i] = x_mid + (x_final-x_mid)*sin(theta[i]-pi/2)
+		y[i] = y_mid + (y_final-y_mid)*sin(theta[i]-pi/2)
+		z[i] = z_final
+
+	elif theta[i] >= pi:
+		x[i] = x_final
+		y[i] = y_final
+		z[i] = z_final
 
 
-for i in range(0,len(t)):
-	x[i] = x_start + d_poke*sin(pace*t[i])*cos(arctan(y_final/x_final))
-	if x[i] < x_start:
-		x[i] = x_start
-
-	y[i] = y_start + d_poke*sin(pace*t[i])*sin(arctan(y_final/x_final))
-	if y[i] < y_start:
-		y[i] = y_start
-
-	z[i] = z_final
+	# x[i] = x_start + d_poke*sin(pace*t[i])*cos(arctan(y_final/x_final))
+	# if x[i] < x_start:
+	# 	x[i] = x_start
+	#
+	# y[i] = y_start + d_poke*sin(pace*t[i])*sin(arctan(y_final/x_final))
+	# if y[i] < y_start:
+	# 	y[i] = y_start
+	#
+	# z[i] = z_final
 
 
 def getServoAng(x, y, z, L1, L2, L3):
@@ -205,5 +226,5 @@ def animate(i):
 	return limb1, limb2, limb3, target, button,
 
 
-ani = animation.FuncAnimation(fig, animate, init_func=init, frames = len(t), interval = 20, blit=False)
+ani = animation.FuncAnimation(fig, animate, init_func=init, frames = len(theta), interval = 1, blit=False)
 plt.show()
