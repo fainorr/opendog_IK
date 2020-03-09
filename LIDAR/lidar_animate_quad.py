@@ -13,7 +13,7 @@ from matplotlib.animation import FFMpegWriter
 scan_data = 'LIDAR/corner208.txt'
 
 # CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
-method = "percent"
+method = "intensity"
 
 obst_size = 5           # number of consecutive dots
 safe_range = 2.0         # search ranges for obstacles
@@ -267,6 +267,6 @@ def animate(i):
 	return(scatter, scatter_close, ref_1, ref_2, range_circle)
 
 
-ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 50, blit=False)
+ani = animation.FuncAnimation(fig, animate, init_func=init, frames = num_samples, interval = 100, blit=False)
 
 plt.show()
