@@ -10,7 +10,7 @@ from matplotlib import _color_data
 
 # --- SCAN FILE AND PARAMETERS ---
 
-scan_data = 'LIDAR/compare_scans/fifth_people.txt'
+scan_data = 'LIDAR/compare_scans/aec_lobby_corner.txt'
 
 obst_size = 5           # number of consecutive dots
 safe_range = 1.5         # search ranges for obstacles
