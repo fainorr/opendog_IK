@@ -10,7 +10,7 @@ from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
 
 # call specific laser scan file
-scan_data = 'LIDAR/corner208.txt'
+scan_data = 'LIDAR/calib.txt'
 
 # CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
 method = "intensity"
@@ -189,7 +189,7 @@ for i in range(0,num_samples):
 fig = plt.figure(figsize=(6,6))
 plt.axis('equal')
 fig.patch.set_facecolor('w')
-ax = plt.axes(xlim=(-10,10),ylim=(-10,10))
+ax = plt.axes(xlim=(-2,2),ylim=(-2,2))
 
 scatter = ax.scatter([],[],s=5,c='xkcd:light navy')
 scatter_close = ax.scatter([],[],s=5,c='xkcd:yellow orange')
