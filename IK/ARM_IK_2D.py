@@ -5,7 +5,6 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FFMpegWriter
 
-
 # ARM INVERSE KINEMATICS 2-D
 
 # arm dimensions
