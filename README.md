@@ -3,7 +3,7 @@ During the 2019-2020 school year, the inverse kinematics and navigation sub-team
 
 ## IK:
 
-1. **ARM_IK_3D.py**: an arm with three links will allow the openDog to interact with its environment.  This python script sets a path for the end-effector, calculates the four joint angles (controlled each by a motor) to achieve that path, and animates the result in 3D space as verification of the equations and requested path.  A visual of the [**arm animation window**](https://github.com/fainorr/opendog_IK/tree/master/images/arm_3d.png) defines the links, axes, and angles of the arm.
+1. **ARM_IK_3D.py**: an arm with three links will allow the openDog to interact with its environment.  This python script sets a path for the end-effector, calculates the four joint angles (controlled each by a motor) to achieve that path, and animates the result in 3D space as verification of the equations and requested path.  A visual of the [**arm animation window**](https://github.com/fainorr/opendog_IK/tree/master/images/arm_3d.pdf) defines the links, axes, and angles.
 
 2. IK_2D_v3: solves the inverse kinematics for a walking gait in 2-dimensions and animates the result.
 
