@@ -8,27 +8,25 @@ from matplotlib.animation import FFMpegWriter
 from mpl_toolkits import mplot3d
 
 
-# ARM INVERSE KINEMATICS 2-D
+# ARM INVERSE KINEMATICS 3-D
 
 # arm dimensions
-
 L1 = 16.0 	# piece connected to base, inches
 L2 = 20.0 	# middle piece, inches
 L3 = 5.0 	# end/tip, inches
 
-gait_duration = 2.0 # seconds
+# speed of motion
 pace = 12.0
 
+# end-effector start location
 x_start = 10.0
 y_start = 0.0
 z_start = 15.0
 
+# button location
 x_final = 20.0
 y_final = 5.0
 z_final = 20.0
-
-# x_start = x_final - d_poke*cos(arctan(y_final/x_final))
-# y_start = y_final - d_poke*sin(arctan(y_final/x_final))
 
 theta = linspace(0,2*pi,101)
 x = zeros(len(theta))
@@ -39,13 +37,20 @@ ang1 = zeros(len(theta))
 ang2 = zeros(len(theta))
 ang3 = zeros(len(theta))
 
+
+# set end-effector path at each point in time:
+
 for i in range(0,len(theta)):
 
+	# the first motion aligns the arm in the same plane as the button by
+	# rotating the base and moving the end-effector to the final z-position
 	if theta[i] < pi/2:
 		x[i] = x_start + (x_start*cos(arctan(y_final/x_final))-x_start)*sin(theta[i])
 		y[i] = y_start + (x_start*sin(arctan(y_final/x_final))-y_start)*sin(theta[i])
 		z[i] = z_start + (z_final-z_start)*sin(theta[i])
 
+	# the second motion, now aligned to the button, moves only the wrist
+	# and elbow joints to approach the button parallel with the floor
 	elif (theta[i] >= pi/2) and (theta[i] < pi):
 		x_mid = x_start + (x_start*cos(arctan(y_final/x_final))-x_start)
 		y_mid = y_start + (x_start*sin(arctan(y_final/x_final))-y_start)
@@ -54,28 +59,20 @@ for i in range(0,len(theta)):
 		y[i] = y_mid + (y_final-y_mid)*sin(theta[i]-pi/2)
 		z[i] = z_final
 
+	# for simulation purposes, the arm will stay at the final position before
+	# resetting itself
 	elif theta[i] >= pi:
 		x[i] = x_final
 		y[i] = y_final
 		z[i] = z_final
 
 
-	# x[i] = x_start + d_poke*sin(pace*t[i])*cos(arctan(y_final/x_final))
-	# if x[i] < x_start:
-	# 	x[i] = x_start
-	#
-	# y[i] = y_start + d_poke*sin(pace*t[i])*sin(arctan(y_final/x_final))
-	# if y[i] < y_start:
-	# 	y[i] = y_start
-	#
-	# z[i] = z_final
-
+# define the inverse kinematics function, which solves for the joint angles at
+# each point in time given the end-effector position and limb dimensions
 
 def getServoAng(x, y, z, L1, L2, L3):
 
 	d_xy = sqrt(x**2 + y**2)
-	A0 = arcsin(y/d_xy)
-
 	xp = d_xy
 
 	if (x>0):
@@ -85,8 +82,16 @@ def getServoAng(x, y, z, L1, L2, L3):
 
 	d_xz = sqrt((xp-L3)**2 + z**2)
 
+	# base angle
+	A0 = arcsin(y/d_xy)
+
+	# shoulder angle
 	A1 = Ad + arccos((L1**2 + d_xz**2 - L2**2)/(2*L1*d_xz))
+
+	# elbow angle
 	A2 = arccos((L1**2 + L2**2 - d_xz**2)/(2*L1*L2))
+
+	# wrist angle (constrained so the end link is parallel with the ground)
 	A3 = 2*pi - A1 - A2
 
 	return A0,A1,A2,A3
@@ -135,9 +140,10 @@ def init():
 
 def animate(i):
 
-	# solve for angles and calculate the limb positions for simulation
-
+	# solve for angles using the defined function
 	ang0[i], ang1[i], ang2[i], ang3[i] = getServoAng(x[i], y[i], z[i], L1, L2, L3)
+
+	# calculate the limb positions for simulation, stored as endpoints of a line
 
 	limb1_x = [0, L1*cos(ang1[i])*cos(ang0[i])]
 	limb1_y = [0, L1*cos(ang1[i])*sin(ang0[i])]
@@ -221,7 +227,6 @@ def animate(i):
 	A1_list.append(A1_ann)
 	A2_list.append(A2_ann)
 	A3_list.append(A3_ann)
-
 
 	return limb1, limb2, limb3, target, button,
 
