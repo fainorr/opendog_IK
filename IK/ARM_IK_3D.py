@@ -7,8 +7,9 @@ from matplotlib import animation
 from matplotlib.animation import FFMpegWriter
 from mpl_toolkits import mplot3d
 
-
+# --------------------------
 # ARM INVERSE KINEMATICS 3-D
+# --------------------------
 
 # arm dimensions
 L1 = 16.0 	# piece connected to base, inches
@@ -37,8 +38,9 @@ ang1 = zeros(len(theta))
 ang2 = zeros(len(theta))
 ang3 = zeros(len(theta))
 
-
-# set end-effector path at each point in time:
+# -------------------------------------------
+# set end-effector path at each point in time
+# -------------------------------------------
 
 for i in range(0,len(theta)):
 
@@ -66,9 +68,11 @@ for i in range(0,len(theta)):
 		y[i] = y_final
 		z[i] = z_final
 
+# ---------------------------
+# INVERSE KINEMATICS FUNCTION
+# ---------------------------
 
-# define the inverse kinematics function, which solves for the joint angles at
-# each point in time given the end-effector position and limb dimensions
+# to solve for joint angles at each point in time given the end-effector position and limb dimensions
 
 def getServoAng(x, y, z, L1, L2, L3):
 
@@ -97,7 +101,9 @@ def getServoAng(x, y, z, L1, L2, L3):
 	return A0,A1,A2,A3
 
 
+# ----------------
 # ANIMATION FIGURE
+# ----------------
 
 fig = plt.figure(figsize=(6,6))
 fig.patch.set_facecolor('w')
@@ -143,7 +149,12 @@ def animate(i):
 	# solve for angles using the defined function
 	ang0[i], ang1[i], ang2[i], ang3[i] = getServoAng(x[i], y[i], z[i], L1, L2, L3)
 
-	# calculate the limb positions for simulation, stored as endpoints of a line
+
+	# ----------------------------
+	# FORWARD KINEMATICS EQUATIONS
+	# ----------------------------
+
+	# calculate the limb positions for simulation, stored as endpoints of each element
 
 	limb1_x = [0, L1*cos(ang1[i])*cos(ang0[i])]
 	limb1_y = [0, L1*cos(ang1[i])*sin(ang0[i])]

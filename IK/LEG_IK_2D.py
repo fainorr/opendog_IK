@@ -6,27 +6,28 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FFMpegWriter
 
-
+# -----------------------
 # INVERSE KINEMATICS: 2-D
+# -----------------------
 
 # robot dimensions
-
 lf = 2.70 # femur, inches
 lt = 2.60 # tibia, inches
 ls = 5.00 # spine, inches
 
-
 # establish gait parameters
-
 gait_duration = 2 # seconds
 leg_pace = 25 # pace of gait
 
+# x-position of foot, moving in the range x_center +- x_stride
 x_center = 0
 x_stride = 0.5
 
+# z-postion of foot, moving in the range z_center +- z_lift
 z_center = -3
 z_lift = 0.5
 
+# phase shifts of each leg
 leg1_offset = 0			# front left
 leg2_offset = pi		# front right
 leg3_offset = pi		# back left
@@ -58,7 +59,8 @@ z4 = zeros(len(t))
 angf4 = zeros(len(t))
 angt4 = zeros(len(t))
 
-# develop functions for foot positions for given gait
+
+# find foot positions for given gait at each point in time
 
 for i in range(0,len(t)):
 	x1[i] = x_center + x_stride*sin(leg_pace*t[i] - pi/2 - leg1_offset)
@@ -74,7 +76,11 @@ for i in range(0,len(t)):
 	z4[i] = z_center + z_lift*sin(leg_pace*t[i] - leg4_offset)
 
 
-# function to solve for servo angles Af (femur) and At (tibia)
+# ---------------------------
+# INVERSE KINEMATICS FUNCTION
+# ---------------------------
+
+#  to solve for servo angles Af (femur) and At (tibia)
 
 def getServoAng(x, z, lf, lt):
 	if (x<0):
@@ -120,8 +126,7 @@ z_ann_list = []
 Af_ann_list = []
 At_ann_list = []
 
-ax.legend([fline1, fline2], ['left legs', 'right legs'], loc='west')
-
+ax.legend([fline1, fline2], ['left legs', 'right legs'], loc='upper right')
 
 
 def init():
@@ -156,8 +161,11 @@ def animate(i):
 	angf3[i], angt3[i] = getServoAng(x3[i], z3[i], lf, lt)
 	angf4[i], angt4[i] = getServoAng(x4[i], z4[i], lf, lt)
 
+	# ----------------------------
+	# FORWARD KINEMATICS EQUATIONS
+	# ----------------------------
 
-	# given these angles, solve for the limb positions for simulation
+	# calculate the limb positions for simulation, stored as endpoints of each element
 
 	xf1 = [0, -lf*cos(angf1[i])]
 	zf1 = [0, -lf*sin(angf1[i])]
