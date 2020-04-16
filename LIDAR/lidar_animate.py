@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
+from analysis_methods import *
 
 # ---------------
 # LIDAR ANIMATION
@@ -101,7 +102,6 @@ for i in range(0,num_samples):
 quad_obstacles = zeros((num_samples,4))
 obst_percent = zeros((num_samples,4))
 obst_intensity = zeros((num_samples,4))
-quad_points = zeros((num_samples,4))
 
 for i in range(0,num_samples):
 
@@ -120,71 +120,18 @@ for i in range(0,num_samples):
 	    else: in_range[j] = 1
 
 
-	# -------------------
-	# METHOD = "QUADRANT"
-	# -------------------
-
-	# separate data into four quadrants [left, back, right, front]
-	# the variable "quad_obstacles" will return 1 if an obstacle of the
-	# specified size exists in the quadrant and 0 if not.
-
+	# method = "QUADRANT"
 	if method == "quadrant":
-		for quad in range(0,4):
-			quad_check = zeros((90-obst_size,1))
+		quad_obstacles[i][:] = analyze_quadrant(obst_size,in_range)
 
-			for j in range(90*quad, 90*(quad+1) - obst_size):
-				scan_obst_size = 0
-
-				for k in range(0,obst_size):
-					if in_range[j+k] == 1: scan_obst_size = scan_obst_size + 1
-
-				if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
-
-			if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
-
-
-	# ------------------
-	# METHOD = "PERCENT"
-	# ------------------
-
-	# the variable "obst_percent" will return the percentage of points in
-	# each quadrant within the search range
-
+	# method = "PERCENT"
 	elif method == "percent":
-		quad_points = [0.,0.,0.,0.]
-		for quad in range(0,4):
-			for j in range(90*quad, 90*(quad+1)):
-				if in_range[j] == 1: quad_points[quad] = quad_points[quad] + 1
+		obst_percent[i][:] = analyze_percent(in_range)
 
-		obst_percent[i] = quad_points/sum(quad_points)*100
-
-
-	# --------------------
-	# METHOD = "INTENSITY"
-	# --------------------
-
-	# per quadrant, the distances of each point from the LIDAR will be squared and summed;
-	# the variable "obst_intensity" will return the percentage of intensity in each quadrant
-
+	# method = "INTENSITY"
 	elif method == "intensity":
-		safe_range = 15         # search ranges for obstacles
-
-		quad_points[i] = [0.,0.,0.,0.]
-		for quad in range(0,4):
-			for j in range(90*quad, 90*(quad+1)):
-				if distances[j] != inf:
-					quad_points[i][quad] = quad_points[i][quad] + distances[j]**2
-
-		for quad in range(0,4):
-			if quad_points[i][quad] > 0:
-				obst_intensity[i][quad] = sum(quad_points[i][:])/quad_points[i][quad]
-			else:
-				obst_intensity[i][quad] = inf
-
-		total_obst_intensity = sum(obst_intensity[i][:])
-
-		for quad in range(0,4):
-			obst_intensity[i][quad] = obst_intensity[i][quad]/total_obst_intensity*100
+		safe_range = 15
+		obst_intensity[i][:] = analyze_intensity(distances)
 
 
 # ----------------

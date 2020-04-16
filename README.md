@@ -14,18 +14,20 @@ During the 2019-2020 school year, the inverse kinematics and navigation sub-team
 
 ## LIDAR:
 
-**_animate scans_**
+**_visualizing and analyzing scans_**
 
-1. **lidar_animate.py**: to identify obstacles in the environment, three analysis techniques were developed using recorded LIDAR scans.  The python script chooses a laser file "scan_data" and an analysis "method", and animates the result with a [**visual representation**](https://github.com/fainorr/opendog_IK/tree/master/images/lidar_ani.pdf) of how the analysis technique operates.  For all the techniques, the scan is divided into four quadrants.  The methods are:
+1. **analysis_methods.py**: to identify obstacles in the environment, three analysis techniques were developed based on raw LIDAR scan data.  For all the techniques, the scan is divided into four quadrants and a certain analysis is performed on each quadrant individually.  This script defines the methods as functions:
     - **"quadrant"**: the boolean output "quad_obstacles" returns 1 if an obstacle (designated by consecutive points) of the specified _obst_size_ exists in the quadrant. The points are only recognized if they exist in a circle of radius _safe_range_.
     - **"percent"**: the output "obst_percent" returns the percentage of points in each quadrant within the _safe_range_.
     - **"intensity"**: the output "obst_intensity" returns a percentage of point intensities in each quadrant.  This point intensity is inversely proportional to the squared distance from the LIDAR.
 
-2. **.txt files**: multiple-frame scans in various locations around Acopian were gathered to better understand how the LIDAR sees its environment.  The title of the **.txt** file indicate where the scan was taken, denoted by a key-word and the nearest room number.
+2. **lidar_animate.py**: using recorded LIDAR scans, the methods were tested and animated.  With a chosen laser scan file _scan_data_ from within the "animate_scans" folder and a selected analysis _method_ from the list of functions, this script animates the data with a [**visual representation**](https://github.com/fainorr/opendog_IK/tree/master/images/lidar_ani.pdf) of how the analysis technique operates.
+
+3. **lidar_compare.py**: using the same analysis techniques developed, this python script compares all three simultaneously for [**single-frame**](https://github.com/fainorr/opendog_IK/tree/master/images/lidar_all.pdf) scans in a greater variety of scenarios.  This helps determine which technique might be most credible in guiding the robot to avoid obstacle collisions.
 
 
-**_compare scans_**
+**_scan text files_**
 
-1. **lidar_compare.py**: using the same analysis techniques developed, this python script compares all three simultaneously for [**single-frame**](https://github.com/fainorr/opendog_IK/tree/master/images/lidar_all.pdf) scans in a greater variety of scenarios.  This helps determine which technique might be most credible in guiding the robot to avoid obstacle collisions.
+1. **animate_scans**: for use with **lidar_animate.py**, multiple-frame scans in various locations around Acopian were gathered to better understand how the LIDAR sees its environment.  The title of the **.txt** file indicate where the scan was taken, denoted by a key-word and the nearest room number.
 
-2. **.txt files**: single-frame scans in more locations around Acopian for visualization in **lidar_compare.py**.
+2. **single_frame_scans**: single-frame scans were gathered in more locations around Acopian for visualization in **lidar_compare.py**.
