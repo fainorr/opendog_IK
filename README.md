@@ -9,4 +9,16 @@ During the 2019-2020 school year, the inverse kinematics and navigation sub-team
 
 3. **LEG_IK_2D.py**: this python script is a [**2D simplification**](https://github.com/fainorr/opendog_IK/tree/master/images/walk_2d.pdf) of the walking gait, which was used in the first attempts of making openDog walk.
 
-4. **static_gait.py**: the walking tests on the real openDog were unsuccessful at first because the walking gait could not achieve stability; so, a static gait where the legs are moved individually was developed.  This script has a different set of foot position equations, but the IK function and animation are reproduced from the LEG_IK_3D.py script.
+4. **static_gait.py**: the walking tests on the real openDog were unsuccessful at first because the walking gait could not achieve stability; so, a static gait where the legs are moved individually was developed.  This script has a different set of foot position equations, but the IK function and animation are reproduced from the **LEG_IK_3D.py** script.
+
+
+## LIDAR:
+
+**_animate scans_**
+
+1. **lidar_animate.py**: to identify obstacles in the environment, three analysis techniques were developed using recorded LIDAR scans.  The python script chooses a laser file "scan_data" and an analysis "method", and animates the result with a [**visual representation**](https://github.com/fainorr/opendog_IK/tree/master/images/lidar_ani.pdf) of how the analysis technique operates.  For all the techniques, the scan is divided into four quadrants.  The methods are:
+  - **"quadrant"**: the boolean output "quad_obstacles" returns 1 if an obstacle (designated by consecutive points) of the specified _obst_size_ exists in the quadrant. The points are only recognized if they exist in a circle of radius _safe_range_.
+  - **"percent"**: the variable "obst_percent" returns the percentage of points in each quadrant within the _safe_range_.
+  - **"intensity"**: the variable "obst_intensity" returns a percentage of point intensities in each quadrant.  This point intensity is inversely proportional to the squared distance from from the LIDAR.
+
+2. **.txt files**: multiple-frame scans in various locations around Acopian were gathered to better understand how the LIDAR sees its environment.  The title of the **.txt** file indicate where the scan was taken, denoted by a key-word and the nearest room number.

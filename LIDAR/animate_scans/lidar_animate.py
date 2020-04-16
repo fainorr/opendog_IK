@@ -1,6 +1,4 @@
 
-# Plot lidar data in and analyze in quadrants for obstacles
-
 from numpy import *
 from math import *
 import time
@@ -9,16 +7,26 @@ from matplotlib import animation
 from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
 
+# ---------------
+# LIDAR ANIMATION
+# ---------------
+
+# analyze LIDAR data in four quadrants to identify obstacles and then animate scans
+# to visualize the analysis techniques and understand how they change based on the raw data
+
 # call specific laser scan file
-scan_data = 'LIDAR/calib.txt'
+scan_data = 'LIDAR/animate_scans/corner208.txt'
 
 # CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
-method = "intensity"
+method = "quadrant"
 
-obst_size = 5           # number of consecutive dots
-safe_range = 2.0         # search ranges for obstacles
+obst_size = 5            	# number of consecutive dots
+safe_range = 2.0         	# search ranges for obstacles
 
-# --- PROCESS SCAN DATA ---
+
+# -----------------
+# PROCESS SCAN DATA
+# -----------------
 # pull text file into an array "laser_scan" of integers
 # laser_scan[i][j] where i = time and j = value within message
 
@@ -42,6 +50,7 @@ with open(scan_data) as f:
 msg_values = len(laser_scan[0])
 num_samples = len(laser_scan)
 
+
 # extract angle values from laser_scan
 
 angle_min = laser_scan[1][4]
@@ -53,7 +62,10 @@ angles = zeros(360)
 for j in range(0,360):
 	angles[j] = angle_min + angle_incr*j
 
-# --- CONVERT TO X,Y ---
+
+# -------------------------
+# PULL DATA FROM LASER SCAN
+# -------------------------
 
 x_pos = zeros(360)
 y_pos = zeros(360)
@@ -81,7 +93,10 @@ for i in range(0,num_samples):
 	r_pos = vstack((r_pos,r_now))
 	a_pos = vstack((a_pos,angles))
 
-# --- ANALYZE SCAN ---
+
+# ------------
+# ANALYZE SCAN: via three analysis techniques
+# ------------
 
 quad_obstacles = zeros((num_samples,4))
 obst_percent = zeros((num_samples,4))
@@ -90,6 +105,8 @@ quad_points = zeros((num_samples,4))
 
 for i in range(0,num_samples):
 	distances = zeros(360)
+
+	# define a boolean array "distances" which is 1 if the point is within the range
 
 	if (method == "quadrant") or (method == "percent"):
 		for j in range(0,len(distances)):
@@ -100,7 +117,9 @@ for i in range(0,num_samples):
 		for j in range(0,len(distances)):
 			distances[j] = r_pos[i][j]
 
+
 	# reorder distances vector to reflect quadrants of interest
+
 	first_sect = distances[315:360]
 	second_sect = distances[0:315]
 
@@ -109,7 +128,14 @@ for i in range(0,num_samples):
 	distances[0:45] = first_sect
 	distances[45:360] = second_sect
 
-	# analyze four quadrants [left, back, right, front]
+
+	# -------------------
+	# METHOD = "QUADRANT"
+	# -------------------
+
+	# separate data into four quadrants [left, back, right, front]
+	# the variable "quad_obstacles" will return 1 if an obstacle of the
+	# specified size exists in the quadrant and 0 if not.
 
 	if method == "quadrant":
 		for quad in range(0,4):
@@ -125,6 +151,14 @@ for i in range(0,num_samples):
 
 			if sum(quad_check >= 1): quad_obstacles[i][quad] = 1
 
+
+	# ------------------
+	# METHOD = "PERCENT"
+	# ------------------
+
+	# the variable "obst_percent" will return the percentage of points in
+	# each quadrant within the search range
+
 	elif method == "percent":
 		quad_points = [0.,0.,0.,0.]
 		for quad in range(0,4):
@@ -132,6 +166,14 @@ for i in range(0,num_samples):
 				if distances[j] == 1: quad_points[quad] = quad_points[quad] + 1
 
 		obst_percent[i] = quad_points/sum(quad_points)*100
+
+
+	# --------------------
+	# METHOD = "INTENSITY"
+	# --------------------
+
+	# per quadrant, the distances of each point from the LIDAR will be squared and summed;
+	# the variable "obst_intensity" will return the percentage of intensity in each quadrant
 
 	elif method == "intensity":
 		safe_range = 15         # search ranges for obstacles
@@ -154,7 +196,9 @@ for i in range(0,num_samples):
 			obst_intensity[i][quad] = obst_intensity[i][quad]/total_obst_intensity*100
 
 
-# --- PREPARE FOR PLOT ---
+# ----------------
+# PREPARE FOR PLOT
+# ----------------
 
 ref_a = [-10,10]
 ref_b = [10,-10]
@@ -168,7 +212,8 @@ for i in range(0,len(circle_r)):
 	circle_x[i] = circle_r[i]*cos(circle_a[i])
 	circle_y[i] = circle_r[i]*sin(circle_a[i])
 
-# make an array of all the points within the safe_range
+
+# make an array of all the points within the safe_range to plot in a different color
 
 x_pos_close = zeros(shape(x_pos))
 y_pos_close = zeros(shape(y_pos))
@@ -184,7 +229,9 @@ for i in range(0,num_samples):
 			m = m+1
 
 
-# --- ANIMATION FIGURE ---
+# ----------------
+# ANIMATION FIGURE
+# ----------------
 
 fig = plt.figure(figsize=(6,6))
 plt.axis('equal')
@@ -208,6 +255,10 @@ def init():
 	ref_1.set_data([], [])
 	ref_2.set_data([], [])
 	range_circle.set_data([], [])
+
+	method_text = "method: {}".format(method)
+	method_ann = plt.annotate(method_text, xy=(0, 0), xytext=(0.95, 0.95), textcoords='axes fraction',
+			horizontalalignment='right', verticalalignment='top')
 	return(scatter, scatter_close, ref_1, ref_2, range_circle)
 
 def animate(i):
