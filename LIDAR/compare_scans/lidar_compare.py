@@ -1,22 +1,25 @@
 
-# Plot lidar scan and compare three analysis techniques
-
 from numpy import *
 from math import *
 import time
 from matplotlib import pyplot as plt
 from matplotlib import _color_data
 
+# -------------
+# LIDAR COMPARE
+# -------------
 
-# --- SCAN FILE AND PARAMETERS ---
+# for single-frame scans, compare three analysis techniques simultaneously
 
-scan_data = 'LIDAR/compare_scans/aec_lobby_corner.txt'
+scan_data = 'LIDAR/compare_scans/fifth_floor_tintersect.txt'
 
 obst_size = 5           # number of consecutive dots
 safe_range = 1.5         # search ranges for obstacles
 
 
-# --- LOAD AND STORE DATA ---
+# -----------------
+# PROCESS SCAN DATA
+# -----------------
 
 file = open(scan_data)
 
@@ -39,7 +42,9 @@ for i in range(0,len(r_pos)):
     y_pos[i] = r_pos[i]*sin(angles[i])
 
 
-# --- ANALYZE SCAN ---
+# ------------
+# ANALYZE SCAN: via three analysis techniques
+# ------------
 # [left, back, right, front]
 
 quad_obstacles =[0.,0.,0.,0.]
@@ -60,7 +65,9 @@ for i in range(0,len(distances)):
     else: in_range[i] = 1
 
 
+# -------------------
 # METHOD = "QUADRANT"
+# -------------------
 
 for quad in range(0,4):
     quad_values = zeros((90-obst_size,1))
@@ -76,7 +83,9 @@ for quad in range(0,4):
     if sum(quad_values >= 1): quad_obstacles[quad] = 1
 
 
+# ------------------
 # METHOD = "PERCENT"
+# ------------------
 
 quad_points = [0.,0.,0.,0.]
 
@@ -87,7 +96,9 @@ for quad in range(0,4):
 obst_percent = quad_points/sum(quad_points)*100
 
 
+# --------------------
 # METHOD = "INTENSITY"
+# --------------------
 
 quad_points = [0.,0.,0.,0.]
 
@@ -112,7 +123,9 @@ print(quad_obstacles)
 print(obst_percent)
 print(obst_intensity)
 
-# --- PREPARE FOR PLOT ---
+# ----------------
+# PREPARE FOR PLOT
+# ----------------
 
 ref_a = [-10,10]
 ref_b = [10,-10]
@@ -140,7 +153,9 @@ for i in range(0,len(r_pos)):
 		m = m+1
 
 
-# --- PLOT SCAN ---
+# -------------
+# CREATE FIGURE
+# -------------
 
 fig = plt.figure(figsize=(6,6))
 fig.patch.set_facecolor('w')

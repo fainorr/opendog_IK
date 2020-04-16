@@ -104,29 +104,20 @@ obst_intensity = zeros((num_samples,4))
 quad_points = zeros((num_samples,4))
 
 for i in range(0,num_samples):
-	distances = zeros(360)
 
-	# define a boolean array "distances" which is 1 if the point is within the range
+	# for analysis, reorder values into four quadrants
 
-	if (method == "quadrant") or (method == "percent"):
-		for j in range(0,len(distances)):
-			if r_pos[i][j] > safe_range: distances[j] = 0
-			else: distances[j] = 1
+	distances = zeros(len(r_pos[i]))
+	in_range = zeros(len(r_pos[i]))
 
-	elif method == "intensity":
-		for j in range(0,len(distances)):
-			distances[j] = r_pos[i][j]
+	distances[0:45] = r_pos[i][315:360]
+	distances[45:360] = r_pos[i][0:315]
 
+	# define a boolean array "in_range" which is 1 if the point is within the range
 
-	# reorder distances vector to reflect quadrants of interest
-
-	first_sect = distances[315:360]
-	second_sect = distances[0:315]
-
-	distances = zeros(360)
-
-	distances[0:45] = first_sect
-	distances[45:360] = second_sect
+	for j in range(0,len(distances)):
+	    if distances[j] > safe_range: in_range[j] = 0
+	    else: in_range[j] = 1
 
 
 	# -------------------
@@ -145,7 +136,7 @@ for i in range(0,num_samples):
 				scan_obst_size = 0
 
 				for k in range(0,obst_size):
-					if distances[j+k] == 1: scan_obst_size = scan_obst_size + 1
+					if in_range[j+k] == 1: scan_obst_size = scan_obst_size + 1
 
 				if scan_obst_size == obst_size: quad_check[j-90*quad] = 1
 
@@ -163,7 +154,7 @@ for i in range(0,num_samples):
 		quad_points = [0.,0.,0.,0.]
 		for quad in range(0,4):
 			for j in range(90*quad, 90*(quad+1)):
-				if distances[j] == 1: quad_points[quad] = quad_points[quad] + 1
+				if in_range[j] == 1: quad_points[quad] = quad_points[quad] + 1
 
 		obst_percent[i] = quad_points/sum(quad_points)*100
 
