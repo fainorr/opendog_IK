@@ -16,7 +16,7 @@ During the 2019-2020 school year, the inverse kinematics and navigation sub-team
 
 **_visualizing and analyzing scans_**
 
-1. **analysis_methods.py**: to identify obstacles in the environment, three analysis techniques were developed based on raw LIDAR scan data.  For all the techniques, the scan is divided into four quadrants and a certain analysis is performed on each quadrant individually.  This script defines the methods as functions:
+1. **quad_analysis_methods.py**: to identify obstacles in the environment, three analysis techniques were developed based on raw LIDAR scan data.  For all the techniques, the scan is divided into four quadrants and a certain analysis is performed on each quadrant individually.  This script defines the methods as functions:
     - **"quadrant"**: the boolean output "quad_obstacles" returns 1 if an obstacle (designated by consecutive points) of the specified _obst_size_ exists in the quadrant. The points are only recognized if they exist in a circle of radius _safe_range_.
     - **"percent"**: the output "obst_percent" returns the percentage of points in each quadrant within the _safe_range_.
     - **"intensity"**: the output "obst_intensity" returns a percentage of point intensities in each quadrant.  This point intensity is inversely proportional to the squared distance from the LIDAR.

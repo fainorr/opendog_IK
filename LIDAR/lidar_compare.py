@@ -4,7 +4,7 @@ from math import *
 import time
 from matplotlib import pyplot as plt
 from matplotlib import _color_data
-from analysis_methods import *
+from quad_analysis_methods import *
 
 # -------------
 # LIDAR COMPARE

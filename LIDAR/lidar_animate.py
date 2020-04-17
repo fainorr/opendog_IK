@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib import _color_data
 from matplotlib.animation import FFMpegWriter
-from analysis_methods import *
+from quad_analysis_methods import *
 
 # ---------------
 # LIDAR ANIMATION
