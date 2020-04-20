@@ -20,9 +20,9 @@ L3 = 5.0 	# end/tip, inches
 pace = 12.0
 
 # end-effector start location
-x_start = 10.0
+x_start = L3+L2-L1
 y_start = 0.0
-z_start = 15.0
+z_start = 0.0
 
 # button location
 x_final = 20.0
