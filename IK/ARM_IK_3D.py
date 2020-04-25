@@ -12,9 +12,9 @@ from mpl_toolkits import mplot3d
 # --------------------------
 
 # arm dimensions
-L1 = 16.0 	# piece connected to base, inches
-L2 = 20.0 	# middle piece, inches
-L3 = 5.0 	# end/tip, inches
+L1 = 0.432 	# piece connected to base, inches
+L2 = 0.540 	# middle piece, inches
+L3 = 0.126 	# end/tip, inches
 
 # speed of motion
 pace = 12.0
@@ -25,9 +25,9 @@ y_start = 0.0
 z_start = 0.0
 
 # button location
-x_final = 20.0
-y_final = 5.0
-z_final = 20.0
+x_final = 0.5
+y_final = 0.2
+z_final = 0.5
 
 theta = linspace(0,2*pi,101)
 x = zeros(len(theta))
@@ -108,9 +108,9 @@ def getServoAng(x, y, z, L1, L2, L3):
 fig = plt.figure(figsize=(6,6))
 fig.patch.set_facecolor('w')
 ax = plt.axes(projection='3d')
-ax.set_xlim(-15,25)
-ax.set_ylim(-20,20)
-ax.set_zlim(0,40)
+ax.set_xlim(-1,1)
+ax.set_ylim(-1,1)
+ax.set_zlim(0,1)
 
 limb1, = ax.plot([],[],[],lw=5,c='xkcd:blue green')
 limb2, = ax.plot([],[],[],lw=5,c='xkcd:blue green')
