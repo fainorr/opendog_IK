@@ -12,10 +12,9 @@ from mpl_toolkits import mplot3d
 # INVERSE KINEMATICS: 3-D
 # -----------------------
 
+# INPUTS
 # ACTION CHOICES: forward, turn, swivel, sideways, down
-
 action = "forward"
-
 
 # robot dimensions
 
@@ -25,7 +24,6 @@ ls = 1.40 # shoulder offset, inches
 
 wspine = 2.00 # spine width, inches
 lspine = 5.00 # spine, inches
-
 
 # -------------------------
 # establish gait parameters
@@ -111,6 +109,7 @@ elif (action == "down"):
 	leg3_offset = 0			# back left
 	leg4_offset = 0 		# back right
 
+# -------------------------
 
 # initialize: x, y, and z positions for each foot & femur and tibia angles for each leg
 # leg indexing: 1-front left, 2-front right, 3-back left, 4-back right

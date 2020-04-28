@@ -10,6 +10,7 @@ from matplotlib.animation import FFMpegWriter
 # INVERSE KINEMATICS: 2-D
 # -----------------------
 
+# INPUTS
 # robot dimensions
 lf = 2.70 # femur, inches
 lt = 2.60 # tibia, inches
@@ -33,6 +34,7 @@ leg2_offset = pi		# front right
 leg3_offset = pi		# back left
 leg4_offset = 0 		# back right
 
+# -----------------------
 
 # initialize: x and z positions for each foot & femur and tibia angles for each leg
 # leg indexing: 1-front left, 2-front right, 3-back left, 4-back right
@@ -80,7 +82,7 @@ for i in range(0,len(t)):
 # INVERSE KINEMATICS FUNCTION
 # ---------------------------
 
-#  to solve for servo angles Af (femur) and At (tibia)
+# to solve for servo angles Af (femur) and At (tibia)
 
 def getServoAng(x, z, lf, lt):
 	if (x<0):

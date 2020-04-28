@@ -11,6 +11,7 @@ from mpl_toolkits import mplot3d
 # ARM INVERSE KINEMATICS 3-D
 # --------------------------
 
+# INPUTS
 # arm dimensions
 L1 = 0.432 	# piece connected to base, inches
 L2 = 0.540 	# middle piece, inches
@@ -28,6 +29,8 @@ z_start = 0.0
 x_final = 0.5
 y_final = 0.2
 z_final = 0.5
+
+# --------------------------
 
 theta = linspace(0,2*pi,101)
 x = zeros(len(theta))
