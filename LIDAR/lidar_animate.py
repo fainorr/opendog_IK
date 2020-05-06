@@ -116,8 +116,8 @@ for i in range(0,num_samples):
 	# define a boolean array "in_range" which is 1 if the point is within the range
 
 	for j in range(0,len(distances)):
-	    if distances[j] > safe_range: in_range[j] = 0
-	    else: in_range[j] = 1
+		if distances[j] > safe_range: in_range[j] = 0
+		else: in_range[j] = 1
 
 
 	# method = "QUADRANT"
