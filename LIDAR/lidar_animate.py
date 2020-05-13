@@ -16,13 +16,13 @@ from quad_analysis_methods import *
 # to visualize the analysis techniques and understand how they change based on the raw data
 
 # call specific laser scan file
-scan_data = 'LIDAR/animate_scans/corner208.txt'
+scan_data = 'LIDAR/animate_scans/gazebo_hallway5-13.txt'
 
 # CHOOSE ANALYSIS METHOD as "quadrant" or "percent" or "intensity"
 method = "quadrant"
 
-obst_size = 5            	# number of consecutive dots
-safe_range = 2.0         	# search ranges for obstacles
+obst_size = 2           	# number of consecutive dots
+safe_range = 1.0         	# search ranges for obstacles
 
 
 # -----------------
